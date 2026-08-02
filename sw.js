@@ -2,7 +2,7 @@
    Network-first for everything: data must always be live.
    Only the app shell falls back to cache when offline. */
 'use strict';
-var CACHE = 'ekkalak-v3';
+var CACHE = 'ekkalak-v4';
 var SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'logo.png'];
 
 self.addEventListener('install', function (e) {
