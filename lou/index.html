@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lou Parcours">
+<meta name="theme-color" content="#6a5ae0">
+<title>Lou Parcours</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+html{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}img{max-width:100%}[hidden]{display:none!important}
+/* Layout: app mobile — en-tête dégradé avec photo et prochaine échéance, contenu en cartes, barre d'onglets en bas (Carnet · Frise · Universités · Assistant) */
+:root{
+  --bg:#f3f1fb; --card:#ffffff; --ink:#221d3a; --muted:#6c6787; --line:#e6e2f3;
+  --brand:#5b4bd6; --brand-2:#8b5cf6; --brand-soft:#ece9ff; --sky:#3aa0e8;
+  --mint:#14a37f; --mint-soft:#dcf5ec; --amber:#d9730d; --amber-soft:#fff1e0; --red:#d93636; --red-soft:#fde6e6;
+  --head-a:#6a5ae0; --head-b:#9b6cf2; --head-ink:#ffffff;
+  --display:"Outfit","Avenir Next",system-ui,sans-serif; --body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --shadow:0 6px 24px rgba(60,40,140,.08);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141225; --card:#1f1c36; --ink:#f1efff; --muted:#a7a2c4; --line:#2f2b4d;
+  --brand:#a89bff; --brand-2:#c4a6ff; --brand-soft:#2b2652; --sky:#7cc4ff;
+  --mint:#4fd6ae; --mint-soft:#163b31; --amber:#ffb162; --amber-soft:#3a2914; --red:#ff8282; --red-soft:#3d1b1f;
+  --head-a:#3f328f; --head-b:#5d3aa8; --head-ink:#ffffff; --shadow:0 6px 24px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141225; --card:#1f1c36; --ink:#f1efff; --muted:#a7a2c4; --line:#2f2b4d;
+  --brand:#a89bff; --brand-2:#c4a6ff; --brand-soft:#2b2652; --sky:#7cc4ff;
+  --mint:#4fd6ae; --mint-soft:#163b31; --amber:#ffb162; --amber-soft:#3a2914; --red:#ff8282; --red-soft:#3d1b1f;
+  --head-a:#3f328f; --head-b:#5d3aa8; --head-ink:#ffffff; --shadow:0 6px 24px rgba(0,0,0,.25); color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:17px/1.5 var(--body);margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;box-sizing:border-box}
+/* en-tête */
+.hero{background:linear-gradient(135deg,var(--head-a),var(--head-b));color:var(--head-ink);border-radius:0 0 28px 28px;padding-block:18px 22px;margin-bottom:6px}
+.hero .wrap{display:grid;gap:14px}
+.who{display:flex;align-items:center;gap:14px}
+.avatar{width:64px;height:64px;border-radius:50%;flex:0 0 auto;background:rgba(255,255,255,.22);display:grid;place-items:center;font:800 1.7rem var(--display);color:#fff;overflow:hidden;border:3px solid rgba(255,255,255,.55)}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.hello{font:800 1.65rem/1.1 var(--display);margin:0;letter-spacing:-.01em}
+.date{opacity:.85;font-size:.95rem;margin:2px 0 0}
+.next{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:14px 16px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-items:center}
+.next .big{grid-row:span 2;font:800 2.4rem/1 var(--display);font-variant-numeric:tabular-nums;text-align:center;min-width:64px}
+.next .big small{display:block;font:600 .75rem/1.2 var(--body);opacity:.85;letter-spacing:.04em;text-transform:uppercase}
+.next .what{font:700 1.08rem/1.25 var(--display)}
+.next .when{opacity:.9;font-size:.92rem}
+.progress{display:flex;align-items:center;gap:12px;font-size:.92rem}
+.track{flex:1;height:10px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden}
+.track i{display:block;height:100%;background:#fff;border-radius:99px;transition:width .4s}
+main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+section[hidden]{display:none}
+h2{font:700 1.2rem/1.2 var(--display);margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+h2 .tag{font:700 .78rem var(--body);background:var(--red-soft);color:var(--red);border-radius:99px;padding:3px 9px}
+.counters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+.counter{background:var(--card);border-radius:18px;padding:12px;box-shadow:var(--shadow);text-align:center}
+.counter b{display:block;font:800 1.7rem/1.1 var(--display);font-variant-numeric:tabular-nums}
+.counter span{font-size:.82rem;color:var(--muted)}
+.counter.red b{color:var(--red)} .counter.amber b{color:var(--amber)} .counter.mint b{color:var(--mint)}
+.list{display:grid;gap:10px}
+.task{background:var(--card);border-radius:18px;padding:14px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;border-left:5px solid transparent}
+.task.late{border-left-color:var(--red)} .task.soon{border-left-color:var(--amber)} .task.ok{border-left-color:var(--brand)}
+.task.done{opacity:.6}.task.done .tt{text-decoration:line-through}
+.tick{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--line);background:none;cursor:pointer;display:grid;place-items:center;color:#fff;font:800 .95rem var(--display);margin-top:1px;padding:0}
+.tick[aria-pressed="true"]{background:var(--mint);border-color:var(--mint)}
+.tt{font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.tmeta{grid-column:2;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.86rem;color:var(--muted)}
+.chip{font:700 .76rem/1 var(--body);border-radius:99px;padding:5px 9px;background:var(--brand-soft);color:var(--brand)}
+.chip.off{background:var(--mint-soft);color:var(--mint)}
+.chip.late{background:var(--red-soft);color:var(--red)} .chip.soon{background:var(--amber-soft);color:var(--amber)}
+.tnote{grid-column:2;font-size:.92rem;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink);opacity:.9}
+.tact{grid-column:2;display:flex;gap:14px}
+.link{font:600 .88rem var(--body);color:var(--brand);background:none;border:0;padding:0;cursor:pointer;text-decoration:none}
+.empty{background:var(--card);border-radius:18px;padding:16px;color:var(--muted);text-align:center;box-shadow:var(--shadow)}
+.fold{background:none;border:0;font:700 .95rem var(--display);color:var(--brand);padding:6px 0;cursor:pointer}
+/* frise */
+.months{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;scroll-snap-type:x proximity}
+.months::-webkit-scrollbar{display:none}
+.month{flex:0 0 auto;scroll-snap-align:start;min-width:74px;background:var(--card);border:2px solid transparent;border-radius:16px;padding:10px 8px;text-align:center;cursor:pointer;box-shadow:var(--shadow);font:inherit;color:var(--ink)}
+.month b{display:block;font:700 1rem var(--display)} .month span{font-size:.78rem;color:var(--muted)}
+.month .dots{display:flex;gap:3px;justify-content:center;margin-top:6px;min-height:6px}
+.month .dots i{width:6px;height:6px;border-radius:50%;background:var(--brand)} .month .dots i.r{background:var(--red)} .month .dots i.m{background:var(--mint)}
+.month[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft)}
+.month.now b{color:var(--brand)}
+.phases{display:grid;gap:8px;margin-bottom:6px}
+.phase{display:flex;gap:10px;align-items:center;font-size:.9rem;color:var(--muted)}
+.phase i{width:12px;height:12px;border-radius:4px;flex:0 0 auto}
+/* universités */
+.unis{display:grid;gap:12px}
+.uni{background:var(--card);border-radius:20px;padding:16px;box-shadow:var(--shadow);display:grid;gap:8px;cursor:pointer;border:0;text-align:left;font:inherit;color:var(--ink)}
+.uni .top{display:flex;align-items:flex-start;gap:12px}
+.badge{width:46px;height:46px;border-radius:14px;flex:0 0 auto;display:grid;place-items:center;font:800 .95rem var(--display);color:#fff}
+.uni h3{margin:0;font:700 1.08rem/1.25 var(--display)}
+.uni .city{font-size:.86rem;color:var(--muted)}
+.star{margin-left:auto;background:none;border:0;font-size:1.5rem;line-height:1;cursor:pointer;color:var(--line);padding:2px}
+.star[aria-pressed="true"]{color:#f5b301}
+.ubar{height:8px;border-radius:99px;background:var(--brand-soft);overflow:hidden}.ubar i{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-2))}
+.usmall{font-size:.88rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:6px;background:var(--card);border-radius:14px;padding:4px;box-shadow:var(--shadow);margin:14px 0 4px}
+.seg button{flex:1;font:700 .9rem var(--display);border:0;background:none;color:var(--muted);border-radius:10px;padding:8px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+/* fiche université */
+dialog{border:0;border-radius:24px;background:var(--card);color:var(--ink);width:min(620px,calc(100vw - 24px));max-height:88vh;padding:0;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(20,16,45,.5)}
+.sheet{padding:20px;display:grid;gap:12px;overflow:auto;max-height:88vh;box-sizing:border-box}
+.sheet h3{margin:0;font:800 1.3rem/1.2 var(--display)}
+.info{display:grid;gap:10px}
+.info div{background:var(--bg);border-radius:14px;padding:10px 12px}
+.info b{display:block;font:700 .78rem var(--display);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px}
+.btn{font:700 1rem var(--display);border:0;border-radius:14px;padding:12px 18px;cursor:pointer;background:var(--brand);color:#fff}
+.btn.soft{background:var(--brand-soft);color:var(--brand)}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.form{display:grid;gap:10px}
+.form label{display:grid;gap:4px;font-size:.88rem;color:var(--muted);font-weight:600}
+input[type=text],input[type=date],select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0;box-sizing:border-box;width:100%}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:460px){.grid3{grid-template-columns:1fr 1fr}}
+.fab{position:fixed;right:max(16px,calc(50vw - 344px));bottom:calc(88px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;font:600 2rem/1 var(--display);box-shadow:0 10px 24px rgba(91,75,214,.35);cursor:pointer;z-index:6}
+/* barre d'onglets */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:7;background:var(--card);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 20px rgba(60,40,140,.06)}
+.tabbar .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px}
+.tabbar button{background:none;border:0;display:grid;justify-items:center;gap:2px;font:700 .78rem var(--display);color:var(--muted);padding:6px 4px;border-radius:12px;cursor:pointer}
+.tabbar svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tabbar button[aria-selected="true"]{color:var(--brand);background:var(--brand-soft)}
+/* budget */
+.pick{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}.pick::-webkit-scrollbar{display:none}
+.pick button{flex:0 0 auto;font:700 .9rem var(--display);border:0;border-radius:99px;padding:9px 14px;background:var(--card);color:var(--ink);box-shadow:var(--shadow);cursor:pointer}
+.pick button[aria-pressed="true"]{background:var(--brand);color:#fff}
+.bcard{background:var(--card);border-radius:22px;padding:18px;box-shadow:var(--shadow);display:grid;gap:12px}
+.bbig{font:800 2.3rem/1 var(--display);font-variant-numeric:tabular-nums}
+.bbig small{font:600 .95rem var(--body);color:var(--muted)}
+.bsub{color:var(--muted);font-size:.9rem}
+.stack{display:flex;height:16px;border-radius:99px;overflow:hidden;background:var(--brand-soft)}
+.stack i{display:block;height:100%}
+.legend{display:grid;gap:6px}
+.legend div{display:flex;justify-content:space-between;gap:10px;font-size:.95rem}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.legend b{font-variant-numeric:tabular-nums}
+.sim{display:grid;gap:10px;background:var(--bg);border-radius:16px;padding:12px}
+.sim label{display:grid;gap:4px;font-size:.9rem;font-weight:600;color:var(--muted)}
+.sim input[type=range]{width:100%;accent-color:var(--brand)}
+.reste{font:800 1.4rem var(--display);font-variant-numeric:tabular-nums}
+.ok-chip{background:var(--mint-soft);color:var(--mint)}.ko-chip{background:var(--red-soft);color:var(--red)}
+.cmp{display:grid;gap:8px}
+.cmprow{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:.9rem;background:none;border:0;padding:4px 0;cursor:pointer;color:var(--ink);text-align:left;font-family:inherit}
+.cmprow .bar{height:12px;border-radius:99px;background:linear-gradient(90deg,var(--brand),var(--brand-2))}
+.cmprow b{font-variant-numeric:tabular-nums}
+.life{display:grid;gap:8px}
+.life div{background:var(--bg);border-radius:14px;padding:10px 12px}
+.life b{display:block;font:700 .78rem var(--display);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px}
+.srcs{font-size:.8rem;color:var(--muted);overflow-wrap:anywhere}
+/* assistant */
+.chatwrap{display:flex;flex-direction:column;min-height:calc(100vh - 300px)}
+.chat{display:flex;flex-direction:column;gap:12px;padding-top:16px}
+.bubble{display:flex;gap:8px;align-items:flex-end;max-width:92%}
+.bubble.me{align-self:flex-end;flex-direction:row-reverse}
+.bubble .face{width:32px;height:32px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font:800 .85rem var(--display);color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-2));overflow:hidden}
+.bubble .face img{width:100%;height:100%;object-fit:cover}
+.bubble .txt{padding:11px 14px;border-radius:20px;min-width:0;overflow-wrap:anywhere;box-shadow:var(--shadow)}
+.bubble.bot .txt{background:var(--card);border-bottom-left-radius:6px}
+.bubble.me .txt{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border-bottom-right-radius:6px}
+.txt p{margin:0 0 .5em}.txt p:last-child{margin:0}.txt ul,.txt ol{margin:.2em 0 .5em;padding-left:1.2em}
+.typing{display:inline-flex;gap:4px;padding:4px 2px}.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:b 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){.typing i{animation:none}}
+.sugg{display:flex;gap:8px;overflow-x:auto;padding:4px 0 6px;scrollbar-width:none}.sugg::-webkit-scrollbar{display:none}
+.sugg button{flex:0 0 auto;font:600 .9rem var(--body);background:var(--card);color:var(--brand);border:1.5px solid var(--brand-soft);border-radius:99px;padding:8px 14px;cursor:pointer;box-shadow:var(--shadow)}
+.composer{position:fixed;left:0;right:0;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:6;background:linear-gradient(transparent,var(--bg) 30%);padding:14px 0 8px}
+.composer form{max-width:720px;margin:0 auto;padding-inline:16px;box-sizing:border-box;display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;resize:none;max-height:8em;line-height:1.4;border-radius:22px;padding:12px 16px;background:var(--card);box-shadow:var(--shadow);border:1.5px solid var(--line)}
+.sendbtn{width:48px;height:48px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;display:grid;place-items:center;cursor:pointer;flex:0 0 auto}
+.sendbtn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.sendbtn[disabled]{opacity:.5}
+.chatfoot{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted);padding:10px 0 120px}
+.gpt{display:grid;gap:12px}.gpt label{display:grid;gap:6px;font-weight:700;color:var(--ink)}
+.gpt textarea{font-size:1.05rem;min-height:7em;resize:vertical}
+.gbig{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-size:1.1rem;padding:16px 18px;border-radius:16px;background:linear-gradient(135deg,#10a37f,#0d8a6b);color:#fff}
+.gbig[aria-disabled="true"]{opacity:.5;pointer-events:none}
+.gtip{font-size:.9rem;color:var(--muted)}
+.lock{max-width:520px;margin:40px auto;text-align:center;display:grid;gap:10px}
+.banner{background:var(--amber-soft);color:var(--ink);border-radius:14px;padding:10px 14px;font-size:.92rem;margin-top:14px}
+button:focus-visible,textarea:focus,select:focus,input:focus{outline:3px solid var(--brand);outline-offset:2px}
+/* vie pratique */
+.vpick{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}.vpick::-webkit-scrollbar{display:none}
+.vpick button{flex:0 0 auto;display:grid;gap:1px;text-align:left;font:700 .95rem var(--display);border:0;border-radius:16px;padding:9px 14px;background:var(--card);color:var(--ink);box-shadow:var(--shadow);cursor:pointer}
+.vpick button small{font:600 .74rem var(--body);color:var(--muted)}
+.vpick button[aria-pressed="true"]{background:var(--brand);color:#fff}.vpick button[aria-pressed="true"] small{color:rgba(255,255,255,.85)}
+.vhead{display:grid;gap:4px}
+.vhead h3{margin:0;font:800 1.6rem/1.1 var(--display);text-wrap:balance}
+.vhead .vsub{color:var(--muted);font-size:.95rem}
+.vtiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vtile{background:var(--bg);border-radius:14px;padding:10px;display:grid;gap:2px;align-content:start}
+.vtile b{font:800 1.25rem/1.15 var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.vtile span{font-size:.78rem;color:var(--muted);line-height:1.3}
+.vtile em{font-style:normal;font-size:.78rem;color:var(--ink);opacity:.85;line-height:1.3}
+@media (max-width:400px){.vtiles{grid-template-columns:1fr 1fr}.vtile:last-child{grid-column:span 2}}
+.vblock{display:grid;gap:6px}
+.vblock>b{font:700 .78rem var(--display);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.vblock ul{margin:0;padding-left:1.1em;display:grid;gap:4px}
+.vchips{display:flex;flex-wrap:wrap;gap:6px}
+.vchips span{font:700 .86rem var(--body);background:var(--mint-soft);color:var(--mint);border-radius:99px;padding:6px 11px}
+.vseason{font-size:.95rem;background:var(--bg);border-radius:14px;padding:10px 12px}
+/* climat */
+.clim{display:grid;gap:2px}
+.crow{display:grid;grid-template-columns:2.7rem 2.4rem minmax(0,1fr) 2.4rem 5.6rem;gap:6px;align-items:center;padding:5px 4px;border-radius:10px;font-variant-numeric:tabular-nums}
+.crow.hdr{font:700 .72rem var(--display);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding-bottom:2px}
+.crow.cur{background:var(--brand-soft)}
+.crow .m{font:700 .92rem var(--display)}
+.crow .lo,.crow .hi{font-size:.92rem;font-weight:700}
+.crow .lo{text-align:right;color:var(--sky)}.crow .hi{color:var(--amber)}
+.ctrack{position:relative;height:12px;border-radius:99px;background:var(--brand-soft)}
+.ctrack i{position:absolute;top:0;bottom:0;border-radius:99px}
+.ctrack .z{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--muted);opacity:.35;border-radius:2px}
+.cico{display:flex;gap:2px;align-items:center;justify-content:flex-end}
+.cico svg{width:16px;height:16px;flex:0 0 auto}
+.drop{fill:var(--sky)} .drop.off{fill:var(--line)}
+.sun{fill:#f5b301;stroke:#f5b301} .cloud{fill:var(--muted);opacity:.55} .snow{stroke:var(--sky);fill:none;stroke-width:2;stroke-linecap:round}
+.clegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.82rem;color:var(--muted)}
+.clegend span{display:inline-flex;align-items:center;gap:4px}
+.clegend svg{width:15px;height:15px}
+.vcmp{display:grid;gap:0;overflow-x:auto}
+.vcmp table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums;min-width:330px}
+.vcmp th{font:700 .72rem var(--display);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:left;padding:6px 6px;border-bottom:1.5px solid var(--line)}
+.vcmp td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.vcmp tr:last-child td{border-bottom:0}
+.vcmp td:first-child{font-weight:700}
+.vcmp button{background:none;border:0;padding:0;font:inherit;color:var(--brand);cursor:pointer;text-align:left}
+/* galerie */
+.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.gbtn{border:0;padding:0;background:none;cursor:pointer;border-radius:16px;display:block;min-width:0}
+.pc{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:16px;overflow:hidden;color:#fff;background:linear-gradient(var(--rot),var(--c1),var(--c2));box-shadow:var(--shadow);display:grid;place-items:center}
+.pc::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 15%,rgba(255,255,255,.35),transparent 45%),repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 6px,transparent 6px 12px)}
+.pc .pcbg{position:absolute;right:-18%;bottom:-22%;width:78%;opacity:.18}
+.pc .pcbg svg{width:100%;height:auto;stroke-width:1.2}
+.pc .pcico{width:38%;height:auto;position:relative;z-index:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.2))}
+.pc .pct{position:absolute;left:8px;right:8px;bottom:7px;z-index:1;font:700 .74rem/1.15 var(--display);text-align:left;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.pc.big{border-radius:22px;aspect-ratio:4/3}
+.pc.big .pcico{width:30%}
+.pc .stamp{position:absolute;top:12px;right:12px;z-index:1;width:64px;height:64px;border-radius:50%;border:2px dashed rgba(255,255,255,.8);display:grid;place-items:center;text-align:center;font:800 .62rem/1.15 var(--display);letter-spacing:.06em;text-transform:uppercase;transform:rotate(-12deg)}
+.gopen{width:100%;margin-top:10px}
+@media (max-width:400px){.pc .pct{font-size:.68rem}}
+#gal-dlg{width:100vw;max-width:100vw;height:100%;max-height:100%;margin:0;border-radius:0;background:var(--bg);padding:0}
+#gal-dlg[open]{display:flex;flex-direction:column}
+.ghead{display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 8px}
+.ghead h3{margin:0;font:800 1.3rem var(--display);flex:1;min-width:0}
+.ghead span{font:700 .95rem var(--display);color:var(--muted);font-variant-numeric:tabular-nums}
+.gx{width:44px;height:44px;border-radius:50%;border:0;background:var(--card);color:var(--ink);font:700 1.4rem/1 var(--display);cursor:pointer;box-shadow:var(--shadow)}
+.gtrack{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;min-height:0}
+.gtrack::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:start;margin:0;padding:4px 16px 8px;box-sizing:border-box;display:grid;align-content:start;gap:14px;overflow-y:auto}
+.slide .pc{width:100%;max-width:560px;justify-self:center}
+.slide figcaption{display:grid;gap:6px;max-width:560px;justify-self:center;width:100%}
+.sgroup{font:700 .78rem var(--display);text-transform:uppercase;letter-spacing:.06em;color:var(--brand)}
+.slide figcaption b{font:800 1.35rem/1.2 var(--display);text-wrap:balance}
+.slide figcaption>span:not(.sgroup){font-size:1.02rem}
+.btn.photos{justify-self:start;text-decoration:none;margin-top:6px}
+.gnav{display:flex;align-items:center;gap:8px;padding:6px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+.gnav>button{flex:0 0 auto}
+.gthumbs{flex:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px 2px}
+.gthumbs::-webkit-scrollbar{display:none}
+.gthumbs button{flex:0 0 56px;border:2px solid transparent;border-radius:12px;padding:0;background:none;cursor:pointer;opacity:.6}
+.gthumbs button .pc{border-radius:10px;box-shadow:none}.gthumbs .pc .pct,.gthumbs .pc .pcbg{display:none}
+.gthumbs button[aria-current="true"]{border-color:var(--brand);opacity:1}
+.tabbar button{font-size:.72rem;line-height:1.1;text-align:center;align-content:start}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="who">
+      <div class="avatar" id="avatar" aria-hidden="true">L</div>
+      <div><p class="hello" id="hello">Bonjour Lou</p><p class="date" id="today"></p></div>
+    </div>
+    <div class="next" id="nextcard">
+      <div class="big" id="next-n">–<small>jours</small></div>
+      <div class="what" id="next-what">Chargement de tes étapes…</div>
+      <div class="when" id="next-when"></div>
+    </div>
+    <div class="progress"><span id="prog-txt">0 étape faite</span><div class="track" aria-hidden="true"><i id="prog-bar" style="width:0%"></i></div></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="lock" id="lock" hidden><h2 style="justify-content:center">Lien incomplet</h2><p>Ouvre l'application avec le lien envoyé par papa. Si ça ne marche toujours pas, préviens-le.</p></div>
+  <div class="banner" id="db-banner" hidden></div>
+
+  <!-- CARNET -->
+  <section id="v-carnet">
+    <div class="counters">
+      <div class="counter red"><b id="c-late">0</b><span>en retard</span></div>
+      <div class="counter amber"><b id="c-week">0</b><span>cette semaine</span></div>
+      <div class="counter mint"><b id="c-done">0</b><span>faites</span></div>
+    </div>
+    <div id="late-wrap" hidden>
+      <h2>En retard <span class="tag" id="late-tag"></span></h2>
+      <div class="list" id="l-late"></div>
+    </div>
+    <h2>Cette semaine</h2>
+    <div class="list" id="l-week"></div>
+    <h2>Les 30 prochains jours</h2>
+    <div class="list" id="l-month"></div>
+    <h2>À faire quand tu peux</h2>
+    <div class="list" id="l-nodate"></div>
+  </section>
+
+  <!-- FRISE -->
+  <section id="v-frise" hidden>
+    <h2>Ma frise · sept. 2026 → sept. 2027</h2>
+    <div class="phases" id="phases"></div>
+    <div class="months" id="months" role="group" aria-label="Mois"></div>
+    <h2 id="month-title"></h2>
+    <div class="list" id="l-monthsel"></div>
+  </section>
+
+  <!-- UNIVERSITÉS -->
+  <section id="v-unis" hidden>
+    <div class="seg" role="group" aria-label="Filtre">
+      <button type="button" aria-pressed="true" data-uf="all">Toutes</button>
+      <button type="button" aria-pressed="false" data-uf="fav">Mes favoris ★</button>
+    </div>
+    <div class="unis" id="l-unis"></div>
+  </section>
+
+  <!-- BUDGET -->
+  <section id="v-budget" hidden>
+    <h2>Budget et vie sur place</h2>
+    <div class="pick" id="b-pick" role="group" aria-label="Université"></div>
+    <div id="b-main"></div>
+    <h2>Comparer le coût par an</h2>
+    <div class="bcard"><div class="cmp" id="b-cmp"></div><div class="bsub">Scolarité + logement + vie courante, en dollars US, avant bourse. Touche une université pour voir le détail.</div></div>
+  </section>
+
+  <!-- VIE PRATIQUE -->
+  <section id="v-vie" hidden>
+    <h2>Vie pratique · les villes de tes universités</h2>
+    <div class="vpick" id="v-pick" role="group" aria-label="Ville"></div>
+    <div id="v-main"></div>
+  </section>
+
+  <!-- CHATGPT -->
+  <section id="v-assistant" hidden>
+    <h2>Demander à ChatGPT</h2>
+    <div class="bcard gpt">
+      <label for="g-q">Ta question<textarea id="g-q" rows="4" placeholder="Par exemple : qu'est-ce que je fais cette semaine ?"></textarea></label>
+      <label for="g-sujet">C'est à propos de<select id="g-sujet">
+        <option value="general">Mes candidatures en général</option>
+        <option value="textes">Mes textes de candidature</option>
+        <option value="hku">HKU</option>
+        <option value="hkbu">HKBU</option>
+        <option value="cityu">CityUHK</option>
+        <option value="waseda">Waseda</option>
+        <option value="autres">Les autres pistes (Keio, Sophia, Sciences Po…)</option>
+      </select></label>
+      <a class="btn gbig" id="g-go" href="https://chatgpt.com/" target="_blank" rel="noopener" aria-disabled="true">Ouvrir dans ChatGPT</a>
+      <p class="gtip" id="g-msg">ChatGPT s'ouvre avec ta question et ce qu'il faut savoir sur ton dossier (tes dates, tes étapes, l'université choisie).</p>
+    </div>
+    <h2>Idées de questions</h2>
+    <div class="sugg" id="sugg">
+      <button type="button" data-s="general">Qu'est-ce que je fais cette semaine ?</button>
+      <button type="button" data-s="general">Dans quel ordre j'envoie mes dossiers ?</button>
+      <button type="button" data-s="general">Qu'est-ce que je demande au lycée ?</button>
+      <button type="button" data-s="textes">Aide-moi à trouver des idées pour mon personal statement</button>
+      <button type="button" data-s="hkbu">HKU ou HKBU, quelle différence ?</button>
+    </div>
+    <div class="banner">ChatGPT t'aide pour tes textes, mais c'est toi qui les écris : Waseda interdit les textes écrits par une IA. Pour une date importante, vérifie aussi sur le site de l'université.</div>
+    <p class="gtip" style="padding-bottom:110px">Si ChatGPT s'ouvre sans ta question : tout est déjà copié, appuie longuement dans la case de ChatGPT et choisis « Coller ».</p>
+  </section>
+</main>
+
+<button class="fab" id="fab" type="button" aria-label="Ajouter une étape">+</button>
+
+<nav class="tabbar" aria-label="Rubriques"><div class="in" role="tablist">
+  <button role="tab" aria-selected="true" data-v="carnet"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11M9 8h6"/></svg>Carnet</button>
+  <button role="tab" aria-selected="false" data-v="frise"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Frise</button>
+  <button role="tab" aria-selected="false" data-v="unis"><svg viewBox="0 0 24 24"><path d="M3 10l9-5 9 5-9 5z"/><path d="M7 12v5c3 2 7 2 10 0v-5"/></svg>Universités</button>
+  <button role="tab" aria-selected="false" data-v="budget"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M7 15h3"/></svg>Budget</button>
+  <button role="tab" aria-selected="false" data-v="vie"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Vie pratique</button>
+  <button role="tab" aria-selected="false" data-v="assistant"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>ChatGPT</button>
+</div></nav>
+
+<dialog id="gal-dlg" aria-labelledby="gal-title">
+  <div class="ghead"><h3 id="gal-title">Galerie</h3><span id="gal-count"></span><button class="gx" type="button" id="gal-close" aria-label="Fermer la galerie">×</button></div>
+  <div class="gtrack" id="gal-track"></div>
+  <div class="gnav"><button class="gx" type="button" id="gal-prev" aria-label="Précédent">‹</button><div class="gthumbs" id="gal-thumbs"></div><button class="gx" type="button" id="gal-next" aria-label="Suivant">›</button></div>
+</dialog>
+
+<dialog id="uni-sheet" aria-labelledby="us-title"><div class="sheet" id="uni-body"></div></dialog>
+
+<dialog id="edit" aria-labelledby="e-title"><form class="sheet form" id="edit-form" method="dialog">
+  <h3 id="e-title">Nouvelle étape</h3>
+  <label>Ce qu'il faut faire<input type="text" id="e-titre" required></label>
+  <label>Université<select id="e-univ"></select></label>
+  <div class="grid3">
+    <label>Date<input type="date" id="e-date"></label>
+    <label>Type<select id="e-nature"><option value="objectif">Objectif</option><option value="officielle">Date officielle</option></select></label>
+    <label>Statut<select id="e-statut"><option value="a_faire">À faire</option><option value="en_cours">En cours</option><option value="fait">Fait</option><option value="ecarte">Écarté</option></select></label>
+  </div>
+  <label>Qui s'en occupe<select id="e-qui"><option>Lou</option><option>Papa</option><option>Lycée</option><option>Lou et papa</option></select></label>
+  <label>Note<textarea id="e-note" rows="4"></textarea></label>
+  <p id="e-err" style="color:var(--red);margin:0" hidden></p>
+  <div class="row"><button class="btn soft" type="button" id="e-cancel">Annuler</button><button class="btn" type="submit">Enregistrer</button></div>
+</form></dialog>
+
+<script>
+let KB_DATE = "10 octobre 2026";
+// Échéances (heure de Vientiane). kind: off = officielle, obj = objectif interne
+const DEADLINES = [
+  {d:"2026-10-24", t:"IELTS", kind:"off"},
+  {d:"2026-11-10", t:"Envoyer CityUHK", kind:"obj"},
+  {d:"2026-11-12", t:"Envoyer HKBU", kind:"obj"},
+  {d:"2026-11-15", t:"CityUHK 1er tour", kind:"off"},
+  {d:"2026-11-16", t:"HKBU 1er tour", kind:"off"},
+  {d:"2026-11-20", t:"Envoyer HKU", kind:"obj"},
+  {d:"2026-11-25", t:"HKU 1er tour · 11 h", kind:"off"},
+  {d:"2026-12-01", t:"HKU : notes du conseiller", kind:"off"},
+  {d:"2026-12-15", t:"Waseda : docs du lycée", kind:"obj"},
+  {d:"2027-01-07", t:"Waseda : ouverture", kind:"off"},
+  {d:"2027-01-28", t:"Waseda : limite · 15 h", kind:"off"},
+];
+
+let KB = "";
+
+
+
+
+let PHOTO = "";
+/* ---------- utilitaires ---------- */
+const $=s=>document.querySelector(s);
+const STAT={a_faire:"À faire",en_cours:"En cours",fait:"Fait",ecarte:"Écarté"};
+const COLORS=["#5b4bd6","#3aa0e8","#e2558f","#14a37f","#d9730d","#8b5cf6","#0ea5a5","#c2410c","#4f46e5","#be185d","#0f766e"];
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function todayD(){const s=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Vientiane",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());return new Date(s+"T00:00:00Z")}
+function days(d){return d?Math.round((new Date(d+"T00:00:00Z")-todayD())/864e5):null}
+const F_LONG=new Intl.DateTimeFormat("fr-FR",{weekday:"long",day:"numeric",month:"long",timeZone:"UTC"});
+const F_SHORT=new Intl.DateTimeFormat("fr-FR",{weekday:"short",day:"numeric",month:"short",timeZone:"UTC"});
+const fd=d=>d?F_SHORT.format(new Date(d+"T00:00:00Z")):"";
+const isOpen=f=>f.statut!=="fait"&&f.statut!=="ecarte";
+function countTxt(n){if(n===null)return"";if(n<0)return(-n)+(n===-1?" jour de retard":" jours de retard");if(n===0)return"Aujourd'hui";if(n===1)return"Demain";return"Plus que "+n+" jours"}
+const byDate=(a,b)=>(a.date||"9999").localeCompare(b.date||"9999")||(a.ordre||0)-(b.ordre||0);
+
+/* ---------- état ---------- */
+let FICHES=[],PARCOURS=[],db=null,canWrite=true,uniFilter="all",selMonth=null;
+const uniOf=id=>PARCOURS.find(p=>p.id===id);
+function setPhoto(){ if(PHOTO&&PHOTO.startsWith("data:")){ $("#avatar").innerHTML='<img alt="" src="'+PHOTO+'">' } }
+setPhoto();
+$("#today").textContent=F_LONG.format(todayD()).replace(/^./,c=>c.toUpperCase());
+
+function taskEl(f){
+  const n=days(f.date),open=isOpen(f),u=uniOf(f.univ);
+  const state=!open?"done":(n!==null&&n<0)?"late":(n!==null&&n<=3)?"late":(n!==null&&n<=7)?"soon":"ok";
+  const el=document.createElement("div"); el.className="task "+state;
+  el.innerHTML=`<button class="tick" type="button" aria-pressed="${f.statut==="fait"}" aria-label="${f.statut==="fait"?"Rouvrir l'étape":"Marquer comme fait"}" ${canWrite?"":"disabled"}>${f.statut==="fait"?"✓":""}</button>
+  <div class="tt">${esc(f.titre)}</div>
+  <div class="tmeta">
+    ${open&&n!==null?`<span class="chip ${n<=3?"late":n<=7?"soon":""}">${esc(countTxt(n))}</span>`:""}
+    ${f.date?`<span>${esc(fd(f.date))}${f.heure?" · "+esc(f.heure):""}</span>`:""}
+    ${f.nature==="officielle"?`<span class="chip off">Officiel</span>`:""}
+    ${u?`<span class="chip">${esc(u.court||u.nom)}</span>`:""}
+    ${f.statut==="en_cours"?`<span class="chip soon">En cours</span>`:""}
+    ${f.qui?`<span>👤 ${esc(f.qui)}</span>`:""}
+  </div>
+  ${f.note?`<div class="tnote">${esc(f.note)}</div>`:""}
+  ${canWrite?`<div class="tact"><button class="link" type="button" data-e>Modifier</button></div>`:""}`;
+  el.querySelector(".tick").onclick=()=>toggle(f);
+  const e=el.querySelector("[data-e]"); if(e) e.onclick=()=>openEdit(f);
+  return el;
+}
+function fill(sel,arr,empty){const b=$(sel);b.textContent="";if(!arr.length){const e=document.createElement("div");e.className="empty";e.textContent=empty;b.append(e);return}arr.forEach(f=>b.append(taskEl(f)))}
+
+function render(){
+  const open=FICHES.filter(isOpen), active=FICHES.filter(f=>f.statut!=="ecarte"), done=FICHES.filter(f=>f.statut==="fait");
+  const late=open.filter(f=>f.date&&days(f.date)<0).sort(byDate);
+  const week=open.filter(f=>f.date&&days(f.date)>=0&&days(f.date)<=7).sort(byDate);
+  const month=open.filter(f=>f.date&&days(f.date)>7&&days(f.date)<=30).sort(byDate);
+  const nod=open.filter(f=>!f.date).sort(byDate);
+  $("#c-late").textContent=late.length;$("#c-week").textContent=week.length;$("#c-done").textContent=done.length;
+  $("#late-wrap").hidden=!late.length;$("#late-tag").textContent=late.length;fill("#l-late",late,"");
+  fill("#l-week",week,FICHES.length?"Rien d'urgent cette semaine.":"Tes étapes arrivent…");
+  fill("#l-month",month,"Rien d'autre ce mois-ci.");
+  fill("#l-nodate",nod,"Tout est daté.");
+  // en-tête
+  const nx=open.filter(f=>f.date&&days(f.date)>=0).sort(byDate)[0];
+  if(nx){const n=days(nx.date);$("#next-n").innerHTML=(n===0?"0":n)+"<small>"+(n===0?"aujourd'hui":n===1?"jour":"jours")+"</small>";$("#next-what").textContent=nx.titre;$("#next-when").textContent=F_LONG.format(new Date(nx.date+"T00:00:00Z"))+(nx.heure?" · "+nx.heure:"")+(nx.nature==="officielle"?" · date officielle":"")}
+  else if(FICHES.length){$("#next-n").innerHTML="✓<small>bravo</small>";$("#next-what").textContent="Aucune échéance à venir";$("#next-when").textContent=""}
+  const pct=active.length?Math.round(100*done.length/active.length):0;
+  $("#prog-txt").textContent=done.length+" / "+active.length+" étapes faites";$("#prog-bar").style.width=pct+"%";
+  renderFrise();renderUnis();renderBudget();renderVie();
+  const eu=$("#e-univ"),cur=eu.value;eu.innerHTML='<option value="commun">Toutes (démarche commune)</option>'+sortedP().map(p=>`<option value="${esc(p.id)}">${esc(p.court||p.nom)}</option>`).join("");eu.value=cur||"commun";
+}
+const sortedP=()=>PARCOURS.slice().sort((a,b)=>(a.rang||99)-(b.rang||99));
+
+/* ---------- frise ---------- */
+const PHASES=[{n:"Préparer (tests, documents, textes)",from:"2026-09",to:"2026-10",c:"#3aa0e8"},{n:"Envoyer les dossiers",from:"2026-11",to:"2027-01",c:"#5b4bd6"},{n:"Réponses et entretiens",from:"2027-02",to:"2027-05",c:"#e2558f"},{n:"Choisir et partir",from:"2027-06",to:"2027-09",c:"#14a37f"}];
+function renderFrise(){
+  const ph=$("#phases");ph.innerHTML=PHASES.map(p=>`<div class="phase"><i style="background:${p.c}"></i>${esc(p.n)}</div>`).join("");
+  const box=$("#months");box.textContent="";
+  const t=todayD(),curKey=t.toISOString().slice(0,7);
+  if(!selMonth) selMonth=curKey<"2026-09"?"2026-09":curKey>"2027-09"?"2027-09":curKey;
+  for(let i=0;i<13;i++){
+    const d=new Date(Date.UTC(2026,8+i,1)),key=d.toISOString().slice(0,7);
+    const fs=FICHES.filter(f=>f.date&&f.date.startsWith(key)&&f.statut!=="ecarte");
+    const p=PHASES.find(p=>key>=p.from&&key<=p.to);
+    const b=document.createElement("button");b.type="button";b.className="month"+(key===curKey?" now":"");b.setAttribute("aria-pressed",key===selMonth);
+    b.style.borderTop="4px solid "+(p?p.c:"transparent");
+    b.innerHTML=`<b>${d.toLocaleDateString("fr-FR",{month:"short",timeZone:"UTC"}).replace(".","")}</b><span>${d.getUTCFullYear()}</span><div class="dots">${fs.slice(0,6).map(f=>`<i class="${f.statut==="fait"?"m":(isOpen(f)&&days(f.date)<0)?"r":""}"></i>`).join("")}</div>`;
+    b.onclick=()=>{selMonth=key;renderFrise()};
+    box.append(b);
+  }
+  const d=new Date(selMonth+"-01T00:00:00Z");
+  $("#month-title").textContent=d.toLocaleDateString("fr-FR",{month:"long",year:"numeric",timeZone:"UTC"}).replace(/^./,c=>c.toUpperCase());
+  fill("#l-monthsel",FICHES.filter(f=>f.date&&f.date.startsWith(selMonth)&&f.statut!=="ecarte").sort(byDate),"Rien de prévu ce mois-ci.");
+}
+
+/* ---------- universités ---------- */
+function initials(p){return (p.court||p.nom).replace(/[^A-Za-zÀ-ÿ× ]/g,"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase()}
+function renderUnis(){
+  const box=$("#l-unis");box.textContent="";
+  const list=sortedP().filter(p=>uniFilter==="all"||p.fav);
+  if(!list.length){const e=document.createElement("div");e.className="empty";e.textContent=uniFilter==="fav"?"Touche l'étoile d'une université pour l'ajouter à tes favoris.":"Les universités arrivent…";box.append(e);return}
+  list.forEach((p,i)=>{
+    const fs=FICHES.filter(f=>f.univ===p.id&&f.statut!=="ecarte"),done=fs.filter(f=>f.statut==="fait").length;
+    const nx=fs.filter(isOpen).filter(f=>f.date).sort(byDate)[0];
+    const c=document.createElement("div");c.className="uni";c.tabIndex=0;c.setAttribute("role","button");
+    c.innerHTML=`<div class="top"><div class="badge" style="background:${COLORS[(p.rang-1+COLORS.length)%COLORS.length]}">${esc(initials(p))}</div>
+      <div style="min-width:0"><h3>${esc(p.nom)}</h3><div class="city">${esc(p.programme||"")}</div></div>
+      <button class="star" type="button" aria-pressed="${!!p.fav}" aria-label="Favori" ${canWrite?"":"disabled"}>★</button></div>
+      ${fs.length?`<div class="ubar"><i style="width:${Math.round(100*done/fs.length)}%"></i></div>`:""}
+      <div class="usmall"><span>${fs.length?done+" / "+fs.length+" étapes":"Pas encore d'étapes"}</span><span>${nx?esc(countTxt(days(nx.date))):esc(p.statut||"")}</span></div>`;
+    c.querySelector(".star").onclick=ev=>{ev.stopPropagation();toggleFav(p)};
+    c.onclick=()=>openUni(p); c.onkeydown=ev=>{if(ev.key==="Enter")openUni(p)};
+    box.append(c);
+  });
+}
+document.querySelectorAll("[data-uf]").forEach(b=>b.onclick=()=>{uniFilter=b.dataset.uf;document.querySelectorAll("[data-uf]").forEach(x=>x.setAttribute("aria-pressed",x===b));renderUnis()});
+function openUni(p){
+  const fs=FICHES.filter(f=>f.univ===p.id).sort(byDate);
+  const body=$("#uni-body");
+  body.innerHTML=`<h3 id="us-title">${esc(p.nom)}</h3>
+   <div class="info">${p.programme?`<div><b>Programme</b>${esc(p.programme)}</div>`:""}${p.limite?`<div><b>Dates limites</b>${esc(p.limite)}</div>`:""}${p.exigences?`<div><b>Ce qu'il faut</b>${esc(p.exigences)}</div>`:""}${p.statut?`<div><b>Où on en est</b>${esc(p.statut)}</div>`:""}</div>
+   <h2 style="margin:6px 0 0">Étapes</h2><div class="list" id="uni-tasks"></div>
+   <div class="row" style="justify-content:space-between">${p.lien?`<a class="btn soft" href="${esc(p.lien)}" target="_blank" rel="noopener">Site officiel</a>`:"<span></span>"}<button class="btn" type="button" id="uni-close">Fermer</button></div>`;
+  const tl=body.querySelector("#uni-tasks"); if(!fs.length){tl.innerHTML='<div class="empty">Pas encore d\'étape pour cette université.</div>'} else fs.forEach(f=>tl.append(taskEl(f)));
+  body.querySelector("#uni-close").onclick=()=>$("#uni-sheet").close();
+  $("#uni-sheet").showModal();
+}
+
+/* ---------- budget ---------- */
+let bSel=null;
+const usd=n=>"$"+Math.round(n).toLocaleString("fr-FR").replace(/\u202f|\u00a0/g," ");
+const loc=(n,c)=>Math.round(n).toLocaleString("fr-FR").replace(/\u202f|\u00a0/g," ")+" "+c;
+function bud(p){const b=p.budget;if(!b||!b.taux)return null;const t=(b.scolarite||0)*b.taux,l=(b.logement||0)*b.taux,v=(b.vie||0)*b.taux;return {b,t,l,v,tot:t+l+v}}
+function prefs(){try{return JSON.parse(localStorage.getItem("lp-budget")||"{}")}catch(e){return{}}}
+function savePrefs(o){try{localStorage.setItem("lp-budget",JSON.stringify(o))}catch(e){}}
+function renderBudget(){
+  const list=sortedP().filter(p=>bud(p));
+  const pick=$("#b-pick"),main=$("#b-main"),cmp=$("#b-cmp");
+  if(!list.length){pick.textContent="";main.innerHTML='<div class="empty">Les coûts des universités arrivent…</div>';cmp.textContent="";return}
+  const favFirst=list.slice().sort((a,b)=>(b.fav?1:0)-(a.fav?1:0)||(a.rang||99)-(b.rang||99));
+  if(!bSel||!list.find(p=>p.id===bSel))bSel=favFirst[0].id;
+  pick.innerHTML=favFirst.map(p=>`<button type="button" aria-pressed="${p.id===bSel}" data-b="${esc(p.id)}">${p.fav?"★ ":""}${esc(p.court||p.nom)}</button>`).join("");
+  pick.querySelectorAll("button").forEach(x=>x.onclick=()=>{bSel=x.dataset.b;renderBudget()});
+  const p=list.find(x=>x.id===bSel),c=bud(p),b=c.b,pr=prefs(),pct=Number(pr["bourse_"+p.id]||0),max=Number(pr.max||0);
+  const reste=c.tot-c.t*pct/100, ans=b.annees||4;
+  const C1="#5b4bd6",C2="#3aa0e8",C3="#e2558f";
+  main.innerHTML=`<div class="bcard">
+    <div><div class="bsub">${esc(p.nom)} · par an</div><div class="bbig">${usd(c.tot)} <small>/ an</small></div><div class="bsub">≈ ${usd(c.tot*ans)} pour ${ans} ans · chiffres ${esc(b.annee||"")}${b.estime?" (en partie estimés)":""}</div></div>
+    <div class="stack" aria-hidden="true"><i style="width:${100*c.t/c.tot}%;background:${C1}"></i><i style="width:${100*c.l/c.tot}%;background:${C2}"></i><i style="width:${100*c.v/c.tot}%;background:${C3}"></i></div>
+    <div class="legend">
+      <div><span><i style="background:${C1}"></i>Frais de scolarité</span><b>${usd(c.t)} <small class="bsub">(${loc(b.scolarite,b.devise)})</small></b></div>
+      <div><span><i style="background:${C2}"></i>Logement</span><b>${usd(c.l)} <small class="bsub">(${loc(b.logement,b.devise)})</small></b></div>
+      <div><span><i style="background:${C3}"></i>Vie courante</span><b>${usd(c.v)} <small class="bsub">(${loc(b.vie,b.devise)})</small></b></div>
+    </div>
+    ${b.notes?`<div class="bsub">${esc(b.notes)}</div>`:""}
+    <div class="sim">
+      <label for="b-pct">Si tu obtiens une bourse sur les frais de scolarité : <span id="b-pct-v">${pct} %</span><input type="range" id="b-pct" min="0" max="100" step="25" value="${pct}"></label>
+      <label for="b-max">Budget maximum de la famille par an (USD)<input type="text" inputmode="numeric" id="b-max" value="${max||""}" placeholder="ex. 30000"></label>
+      <div>Reste à payer par an : <span class="reste" id="b-reste">${usd(reste)}</span> <span id="b-flag"></span></div>
+      <div class="bsub">Simulation seulement : une bourse n'est jamais garantie.</div>
+    </div>
+    ${b.bourses?`<div class="life"><div><b>Bourses possibles</b>${esc(b.bourses)}</div></div>`:""}
+  </div>
+  ${p.vie?`<h2>Vivre à ${esc(p.vie.ville||"")}</h2><div class="bcard life">${["climat","transport","langue","etudiant","securite","cout"].filter(k=>p.vie[k]).map(k=>`<div><b>${{climat:"Climat",transport:"Se déplacer",langue:"Langue au quotidien",etudiant:"Vie étudiante",securite:"Sécurité",cout:"Coût de la vie"}[k]}</b>${esc(p.vie[k])}</div>`).join("")}</div>`:""}
+  ${b.sources?`<p class="srcs">Sources : ${esc(b.sources)}${b.tauxNote?" · "+esc(b.tauxNote):""}</p>`:""}`;
+  const flag=()=>{const pc=Number($("#b-pct").value),m=Number(String($("#b-max").value).replace(/[^0-9]/g,"")),r=c.tot-c.t*pc/100;$("#b-pct-v").textContent=pc+" %";$("#b-reste").textContent=usd(r);$("#b-flag").innerHTML=m?(r<=m?'<span class="chip ok-chip">dans le budget</span>':'<span class="chip ko-chip">'+usd(r-m)+' de plus</span>'):"";const o=prefs();o["bourse_"+p.id]=pc;o.max=m||"";savePrefs(o)};
+  $("#b-pct").oninput=flag;$("#b-max").oninput=flag;flag();
+  const mx=Math.max(...list.map(x=>bud(x).tot));
+  cmp.innerHTML=list.slice().sort((a,b)=>bud(a).tot-bud(b).tot).map(x=>{const t=bud(x).tot;return `<button type="button" class="cmprow" data-b="${esc(x.id)}"><span>${x.fav?"★ ":""}${esc(x.court||x.nom)}</span><span><i class="bar" style="display:block;width:${Math.max(6,100*t/mx)}%"></i></span><b>${usd(t)}</b></button>`}).join("");
+  cmp.querySelectorAll("button").forEach(x=>x.onclick=()=>{bSel=x.dataset.b;renderBudget();window.scrollTo({top:0,behavior:"smooth"})});
+}
+
+const VILLES=[{"nom":"Hong Kong","pays":"Chine · région administrative spéciale","unis":["hku","hkbu","cityu","hku-scpo"],"dec":"+1 h","pal":["#e0476b","#5b4bd6"],"saisons":"Hiver doux et sec d'octobre à mars, la plus belle saison pour sortir. Été très chaud, humide et pluvieux de mai à septembre, avec des typhons possibles.","reputee":["La baie de Victoria et ses gratte-ciel, illuminés chaque soir","La cuisine cantonaise : dim sum, nouilles wonton, thé au lait","Des montagnes et sentiers partout : environ 40 % du territoire est en parcs naturels","Les ferries vers des îles tranquilles comme Lamma ou Lantau","Une ville très internationale, où l'anglais suffit au quotidien"],"sports":["Randonnée","Bateau-dragon","Natation","Voile","Badminton","Course à pied","Escalade"],"asavoir":["Saison des typhons de juin à octobre : au signal n° 8, les cours sont annulés et tout le monde reste chez soi.","Carte Octopus pour le métro, le bus, le ferry et les petits achats.","Logements minuscules et chers : la première année se passe souvent en résidence (« hall »).","Clim très forte partout l'été : un pull dans le sac pour les salles de cours."],"galerie":{"ville":[["La baie de Victoria la nuit","Le spectacle des tours illuminées vu depuis Tsim Sha Tsui.","skyline","Victoria Harbour night skyline Hong Kong"],["Le Star Ferry","Le vieux ferry vert et blanc qui traverse la baie pour quelques dollars.","boat","Star Ferry Hong Kong"],["Le Peak","Le point de vue au sommet de l'île, accessible en funiculaire.","mountain","Victoria Peak view Hong Kong"],["Dragon's Back","La randonnée la plus connue, une crête au-dessus de la mer.","mountain","Dragon's Back hike Hong Kong"],["Les dim sum","Paniers vapeur partagés à plusieurs, le rituel du week-end.","bowl","dim sum Hong Kong restaurant"],["Les tramways de l'île","Les « ding ding » à étage qui traversent l'île depuis 1904.","train","Hong Kong tram ding ding"],["L'île de Lantau","Le grand Bouddha de Tian Tan et les villages de pêcheurs.","temple","Tian Tan Buddha Lantau"]],"campus":{"hku":[["Le Main Building","Le bâtiment historique de HKU (1912), sur les pentes de Pokfulam.","clock","HKU Main Building"],["Le Centennial Campus","La partie moderne du campus, en terrasses au-dessus de la ville.","campus","HKU Centennial Campus"],["La station HKU","Le métro arrive directement au pied du campus.","train","HKU MTR station"],["La vie en hall","Les résidences et leurs traditions : sport, soirées, entraide.","people","HKU residential hall students"]],"hkbu":[["Le campus de Kowloon Tong","Un campus compact dans un quartier calme et vert.","campus","Hong Kong Baptist University campus"],["Les clubs étudiants","Sport, musique, cinéma : la vie associative de HKBU.","people","HKBU students activities"]],"cityu":[["Le campus de CityUHK","Des bâtiments reliés entre eux, à deux pas du métro.","campus","City University of Hong Kong campus"],["Le Creative Media Centre","Le bâtiment aux formes cassées dessiné par Daniel Libeskind.","building","CityU Run Run Shaw Creative Media Centre"],["Les résidences étudiantes","Les « halls » de CityUHK, juste à côté des salles de cours.","people","CityU student residence hall"]]}},"hab":"7,5 millions","habNote":"tout le territoire, 2026","qs":17,"clim":{"st":"Observatoire de Hong Kong","lo":[15,15,18,21,25,27,27,27,26,24,20,16],"hi":[19,19,22,26,29,31,32,31,31,28,25,20],"r":[0,0,1,2,3,3,3,3,3,2,0,0],"s":[0,0,0,0,0,0,0,0,0,0,0,0],"u":[1,1,0,1,1,1,2,2,2,2,2,1],"rec":[0,37]},"id":"hongkong"},{"nom":"Tokyo","pays":"Japon","unis":["waseda","sophia"],"dec":"+2 h","pal":["#e2558f","#3aa0e8"],"saisons":"Printemps doux avec les cerisiers fin mars, saison des pluies de juin à mi-juillet, puis été très chaud. Automne superbe et hiver sec et ensoleillé, frais mais rarement sous zéro.","reputee":["Une ville immense, et pourtant très sûre et très propre","Des quartiers aux ambiances très différentes : Shibuya, Shinjuku, Asakusa, Shimokitazawa","La gastronomie : ramen, sushi, et des konbini ouverts 24 h/24","Manga, anime, mode et musique","Les cerisiers en fleurs fin mars","Des excursions faciles : mont Fuji, Kamakura, Nikko"],"sports":["Tennis","Judo","Kendo","Aïkido","Course à pied","Ski l'hiver","Randonnée","Danse"],"asavoir":["Séismes : exercices réguliers et alertes sur le téléphone ; garder un petit sac d'urgence.","Carte Suica ou Pasmo pour tous les trains et métros.","La vie étudiante passe par les clubs (« circles ») : on s'inscrit en avril.","Le dernier train part vers minuit : prévoir son retour."],"galerie":{"ville":[["Le carrefour de Shibuya","Le passage piéton le plus célèbre du monde.","people","Shibuya crossing"],["Les cerisiers en fleurs","Pique-niques sous les arbres fin mars (« hanami »).","flower","Tokyo cherry blossom hanami"],["Asakusa et le Sensō-ji","Le plus vieux temple de Tokyo et sa grande lanterne rouge.","lantern","Sensoji temple Asakusa"],["Shinjuku la nuit","Néons, petites ruelles et restaurants minuscules.","skyline","Shinjuku night"],["Les ramen","Un bol fumant au comptoir, le repas étudiant par excellence.","bowl","ramen shop Tokyo"],["Le mont Fuji","Visible depuis la ville par temps clair, à 2 h pour l'excursion.","mountain","Mount Fuji from Tokyo"],["Le sanctuaire Meiji","Une forêt en pleine ville, à côté de Harajuku.","torii","Meiji Jingu shrine"]],"campus":{"waseda":[["L'auditorium Ōkuma","Le symbole de Waseda, avec sa tour de l'horloge.","clock","Waseda Okuma Auditorium"],["La statue du fondateur","Ōkuma Shigenobu, qui a fondé l'université en 1882.","campus","Waseda Okuma statue campus"],["Le jardin Ōkuma","La pelouse où les étudiants se posent entre deux cours.","tree","Okuma Garden Waseda"],["Takadanobaba","Le quartier étudiant : ramen pas chers et karaokés.","bowl","Takadanobaba students"]],"sophia":[["Le campus de Yotsuya","En plein centre de Tokyo, à côté de la gare.","campus","Sophia University Yotsuya campus"],["La promenade de Sotobori","Les cerisiers le long des anciennes douves du château.","flower","Sotobori park cherry blossom Yotsuya"],["L'église Saint-Ignace","L'église voisine de cette université fondée par les jésuites.","temple","St. Ignatius Church Tokyo"]]}},"hab":"14,3 millions","habNote":"préfecture de Tokyo, 2026 (≈ 37 M avec la banlieue)","qs":2,"clim":{"st":"Tokyo, parc Kitanomaru","lo":[1,2,5,10,15,19,22,24,20,15,9,4],"hi":[10,11,14,19,24,26,30,31,28,22,17,12],"r":[1,1,2,2,2,2,2,2,2,2,1,1],"s":[1,1,0,0,0,0,0,0,0,0,0,0],"u":[2,2,2,2,2,1,1,2,1,1,1,2],"rec":[-9,40]},"id":"tokyo"},{"nom":"Fujisawa","pays":"Japon · côte de Shōnan, à 1 h de Tokyo","unis":["keio"],"dec":"+2 h","pal":["#14a37f","#3aa0e8"],"saisons":"Comme Tokyo mais un peu plus doux grâce à la mer. Saison des pluies en juin, été chaud idéal pour la plage, hiver sec et très ensoleillé avec vue sur le mont Fuji.","reputee":["La côte de Shōnan, haut lieu du surf au Japon","L'île d'Enoshima, son sanctuaire et sa tour-phare","Le mont Fuji visible par temps clair","Kamakura toute proche : le grand Bouddha et ses temples"],"sports":["Surf","Paddle","Voile","Beach-volley","Vélo","Course au bord de la mer"],"asavoir":["Le campus SFC est à la campagne : un bus depuis la gare de Shōnandai.","Tokyo à environ 1 h–1 h 15 de train.","Les épreuves de voile des Jeux olympiques de Tokyo ont eu lieu à Enoshima.","Typhons possibles en fin d'été."],"galerie":{"ville":[["L'île d'Enoshima","Reliée à la côte par un pont, avec ses sanctuaires et ses grottes.","boat","Enoshima island"],["Les surfeurs de Shōnan","Les plages de Kugenuma et Tsujido toute l'année.","wave","Shonan surfing Kugenuma"],["Le Fuji au coucher du soleil","Vu depuis la plage les jours clairs d'hiver.","mountain","Mount Fuji sunset Enoshima"],["Le grand Bouddha de Kamakura","À 20 min, la statue de bronze du XIIIe siècle.","temple","Kamakura Daibutsu"],["Le petit train Enoden","La ligne qui longe la mer jusqu'à Kamakura.","train","Enoden train sea"]],"campus":{"keio":[["Le campus SFC","Des bâtiments modernes dessinés par l'architecte Fumihiko Maki.","campus","Keio SFC campus"],["L'étang du campus","Le cœur vert du campus, où les étudiants se retrouvent.","tree","Keio SFC pond Kamoike"],["Les projets étudiants","À SFC, on travaille en laboratoire de recherche dès les premières années.","book","Keio SFC students research"],["Les résidences de SFC","Des logements étudiants à côté du campus.","people","Keio SFC student dormitory"]]}},"hab":"445 000","habNote":"ville, 2026","qs":null,"qsNote":"petite ville, non classée (Tokyo, 2e, est à 1 h)","clim":{"st":"Tsujido, Fujisawa","lo":[2,2,5,10,15,19,23,24,21,15,10,4],"hi":[11,11,14,19,22,25,28,30,28,23,18,13],"r":[1,1,2,2,2,2,2,2,2,2,1,1],"s":[0,0,0,0,0,0,0,0,0,0,0,0],"u":[2,2,2,2,2,1,2,2,1,1,1,2],"rec":[-5,37]},"id":"fujisawa"},{"nom":"Beppu","pays":"Japon · île de Kyūshū","unis":["apu"],"dec":"+2 h","pal":["#d9730d","#0ea5a5"],"saisons":"Climat doux au bord de la mer. Pluies fortes en juin-juillet et typhons possibles à la fin de l'été. Hiver frais, avec parfois quelques flocons sur les hauteurs du campus.","reputee":["La ville thermale la plus célèbre du Japon : plus de 2 000 sources chaudes","Les « enfers de Beppu » : des bassins bouillants aux couleurs étonnantes","Les panaches de vapeur au-dessus des toits du quartier de Kannawa","Les bains de sable chaud au bord de la mer","Une université où la moitié des étudiants viennent de l'étranger"],"sports":["Randonnée","Football","Futsal","Course à pied","Natation","Kayak"],"asavoir":["Le campus est perché sur la colline de Jūmonjibaru : environ 30 min de bus depuis le centre.","Fukuoka, la grande ville de Kyūshū, à environ 2 h de train.","En ville, quelques mots de japonais aident beaucoup.","Ville petite et calme : la vie sociale se fait surtout sur le campus."],"galerie":{"ville":[["La vapeur de Kannawa","Des dizaines de panaches blancs au-dessus des maisons.","steam","Beppu Kannawa steam"],["L'enfer bleu Umi Jigoku","Un bassin bouillant d'un bleu turquoise.","steam","Umi Jigoku Beppu"],["L'enfer rouge Chinoike","Une eau rouge sang, la plus surprenante des « enfers ».","steam","Chinoike Jigoku Beppu"],["Les bains de sable","On se fait recouvrir de sable chaud au bord de la mer.","wave","Beppu sand bath"],["Le mont Tsurumi","Le téléphérique et la vue sur toute la baie.","mountain","Mount Tsurumi Beppu ropeway"],["La baie de Beppu","La ville entre montagne et mer.","wave","Beppu bay view"]],"campus":{"apu":[["Le campus sur la colline","Vue sur la baie depuis les salles de cours.","campus","Ritsumeikan APU campus view"],["AP House","Les résidences où vivent les nouveaux étudiants.","people","APU AP House dormitory"],["Les Multicultural Weeks","Chaque pays présente sa culture : danse, cuisine, spectacles.","lantern","APU Multicultural Week"],["La cafétéria","Des plats du monde entier pour des étudiants venus de partout.","bowl","APU cafeteria students"]]}},"hab":"112 000","habNote":"ville, 2025","qs":null,"qsNote":"petite ville, non classée","clim":{"st":"Ōita, ville voisine de Beppu","lo":[3,3,6,10,15,19,24,24,21,15,10,5],"hi":[11,12,15,20,24,27,31,32,28,23,18,13],"r":[1,1,1,2,2,3,3,2,3,2,1,1],"s":[2,2,1,0,0,0,0,0,0,0,0,2],"u":[1,1,2,2,2,1,2,2,1,1,1,1],"rec":[-8,38]},"id":"beppu"},{"nom":"Séoul","pays":"Corée du Sud · 1re année à Songdo (Incheon)","unis":["yonsei"],"dec":"+2 h","pal":["#4f46e5","#e2558f"],"saisons":"Quatre vraies saisons. Hiver très froid et sec de décembre à février, avec de la neige. Mousson en juillet-août, très pluvieuse. Printemps et automne magnifiques. À Songdo, le climat est presque le même.","reputee":["K-pop, K-drama et mode","Les palais royaux comme Gyeongbokgung","La cuisine : barbecue coréen, street food, cafés à thème","Des montagnes en pleine ville, comme le Bukhansan","La rivière Han et ses grands parcs","Une ville ultra-connectée"],"sports":["Randonnée","Vélo","Taekwondo","Baseball (en supporter)","Ski l'hiver","Patinage","Danse K-pop"],"asavoir":["Hiver très froid : une vraie doudoune de décembre à février.","Poussières fines certains jours de printemps : surveiller l'indice et porter un masque.","Carte T-money pour le métro et les bus.","Songdo, où se passe la 1re année de Yonsei UIC, est une ville nouvelle et calme à environ 1 h de Séoul."],"galerie":{"ville":[["Le palais Gyeongbokgung","Le grand palais royal, avec la relève de la garde.","temple","Gyeongbokgung palace"],["Les bords de la rivière Han","Pique-niques, vélo et concerts le soir.","bridge","Han River park Seoul"],["Le village de Bukchon","Les maisons traditionnelles en bois entre les collines.","temple","Bukchon Hanok village"],["Le marché de Gwangjang","Pancakes, nouilles et street food depuis plus d'un siècle.","bowl","Gwangjang market food"],["Le mont Bukhansan","Une vraie montagne à une heure de métro.","mountain","Bukhansan hiking Seoul"],["Myeongdong et Hongdae","Boutiques, musique et danse de rue.","people","Hongdae street performance"],["Songdo","La ville nouvelle de la 1re année, ses canaux et ses tours.","skyline","Songdo Central Park"]],"campus":{"yonsei":[["L'Underwood Hall","Le bâtiment de pierre couvert de lierre, symbole de Yonsei.","campus","Yonsei Underwood Hall"],["L'allée Baekyang-ro","La grande allée centrale du campus de Sinchon.","tree","Yonsei Baekyang-ro"],["Le campus de Songdo","Les résidences de la 1re année, au bord de la mer Jaune.","building","Yonsei International Campus Songdo"],["Le match Yonsei–Korea","La grande rivalité sportive annuelle, en chants et en couleurs.","ball","Yonsei Korea University games"],["Le festival Akaraka","Le grand festival de chants et d'encouragements de Yonsei.","people","Yonsei Akaraka festival"]]}},"hab":"9,6 millions","habNote":"Séoul, 2026 · Incheon (Songdo) : 3 M","qs":1,"clim":{"st":"Séoul","lo":[-6,-3,2,8,14,19,22,23,18,11,4,-3],"hi":[2,5,11,18,24,28,29,30,26,20,12,4],"r":[0,0,0,1,1,2,3,3,2,1,1,0],"s":[2,2,1,0,0,0,0,0,0,0,1,2],"u":[1,2,2,2,2,2,1,1,2,2,1,1],"rec":[-23,40]},"id":"seoul"},{"nom":"Shanghai","pays":"Chine","unis":["nyush"],"dec":"+1 h","pal":["#c2410c","#5b4bd6"],"saisons":"Été chaud et humide, avec la saison des pluies (« meiyu ») en juin. Hiver frais et humide, parfois quelques flocons. Printemps et automne agréables.","reputee":["Le Bund et la vue sur les tours de Pudong","L'ancienne concession française et ses rues bordées de platanes","Les xiaolongbao et les cuisines de toute la Chine","Les musées et l'art contemporain du West Bund","Le train rapide vers Suzhou et Hangzhou"],"sports":["Badminton","Tennis de table","Course le long du fleuve","Basket","Tai-chi","Danse"],"asavoir":["Internet filtré : Google, WhatsApp et Instagram ne marchent pas sans VPN.","On paie presque tout avec WeChat Pay ou Alipay.","Pas de chauffage central dans les logements : l'hiver humide paraît plus froid que le thermomètre.","Le mandarin de Lou sera un vrai atout en ville."],"galerie":{"ville":[["Le Bund","La promenade le long du fleuve et ses façades des années 1920.","skyline","The Bund Shanghai"],["Les tours de Pudong","La Shanghai Tower et la Perle de l'Orient la nuit.","skyline","Pudong skyline night"],["L'ancienne concession française","Platanes, cafés et maisons « shikumen ».","tree","Former French Concession Shanghai"],["Le jardin Yuyuan","Un jardin classique au milieu de la vieille ville.","lantern","Yuyuan Garden Shanghai"],["Les xiaolongbao","Les raviolis vapeur remplis de bouillon.","bowl","xiaolongbao Shanghai"],["Le TGV vers Suzhou","Jardins et canaux à 30 min de train.","train","Suzhou canals"]],"campus":{"nyush":[["Le campus de Qiantan","Le campus moderne de NYU Shanghai à Pudong.","campus","NYU Shanghai Qiantan campus"],["Les résidences","Les étudiants chinois et étrangers partagent leurs chambres.","people","NYU Shanghai dorm"],["Un semestre à l'étranger","Échanges possibles avec New York et Abou Dhabi.","book","NYU Shanghai students"]]}},"hab":"24,8 millions","habNote":"municipalité, 2025","qs":21,"clim":{"st":"Shanghai, Xujiahui","lo":[3,4,8,13,18,22,26,26,23,17,11,5],"hi":[9,11,15,21,26,29,33,33,29,24,18,11],"r":[1,1,1,1,1,2,2,2,2,1,1,1],"s":[1,1,1,0,0,0,0,0,0,0,0,1],"u":[1,1,1,1,1,1,2,2,2,1,1,1],"rec":[-10,41]},"id":"shanghai"},{"nom":"Paris","pays":"France","unis":["scpo"],"dec":"−5 h l'été, −6 h l'hiver","pal":["#5b4bd6","#14a37f"],"saisons":"Climat tempéré : pas de grosses pluies mais un ciel souvent gris, surtout de novembre à février, quand le jour tombe vers 17 h. Été doux à chaud, avec des épisodes de canicule.","reputee":["Les musées, les monuments et la culture partout","Le Quartier latin et Saint-Germain, où se trouve Sciences Po","Cafés, boulangeries et marchés","Une grande ville étudiante","Des trains vers toute l'Europe"],"sports":["Course à pied","Natation","Escalade en salle","Vélo","Danse","Aviron"],"asavoir":["Logement très cher : viser le CROUS ou une colocation.","Carte Imagine R (moins de 26 ans) pour le métro, à prix réduit.","Le jardin du Luxembourg, tout près de Sciences Po, pour courir ou réviser.","Le français de Lou est un vrai avantage : aucune barrière de langue."],"galerie":{"ville":[["Le jardin du Luxembourg","Le parc des étudiants de la rive gauche.","tree","Jardin du Luxembourg"],["Les quais de Seine","Bouquinistes et pique-niques au coucher du soleil.","bridge","quais de Seine Paris"],["Le Louvre","Le plus grand musée du monde, gratuit pour les moins de 26 ans de l'UE.","temple","Louvre pyramid"],["Les terrasses de café","Le lieu de rendez-vous de toute la vie parisienne.","bowl","café terrasse Paris"],["La tour Eiffel","Le symbole, vu depuis le Trocadéro.","tower","Eiffel Tower Trocadero"],["Le métro","Plus de 300 stations pour aller partout.","train","Paris metro station"]],"campus":{"scpo":[["Le 27 rue Saint-Guillaume","L'entrée historique de Sciences Po.","campus","27 rue Saint-Guillaume Sciences Po"],["La Péniche","Le grand hall et son banc où tout le monde se retrouve.","people","Sciences Po Péniche"],["Le campus de l'Artillerie","Le nouveau campus ouvert en 2022 autour d'une grande cour.","building","Sciences Po campus Artillerie"],["La bibliothèque","Des milliers d'ouvrages de sciences politiques.","book","bibliothèque Sciences Po"]]}},"hab":"2,1 millions","habNote":"Paris intra-muros, 2023 (≈ 12 M avec la région)","qs":7,"clim":{"st":"Paris, parc Montsouris","lo":[3,3,6,8,11,14,16,16,13,10,6,4],"hi":[8,9,13,17,20,23,26,26,22,17,11,8],"r":[1,1,1,1,1,1,1,1,1,1,1,1],"s":[1,1,1,1,0,0,0,0,0,0,1,1],"u":[0,0,1,2,2,2,2,2,2,1,0,0],"rec":[-24,43]},"id":"paris"},{"nom":"Le Havre","pays":"France · Normandie, à 2 h de Paris","unis":["hku-scpo"],"dec":"−5 h l'été, −6 h l'hiver","pal":["#3aa0e8","#0f766e"],"saisons":"Climat océanique : jamais très chaud, jamais très froid. Petites pluies fréquentes et vent, surtout en automne et en hiver. Été lumineux et doux.","reputee":["Le centre-ville reconstruit par Auguste Perret, classé au patrimoine mondial de l'UNESCO","Un des plus grands ports de France","Monet y a peint « Impression, soleil levant »","La plage de galets en pleine ville","Les falaises d'Étretat à 30 km"],"sports":["Voile","Kitesurf","Course sur la promenade","Natation","Vélo","Football (aller voir le HAC)"],"asavoir":["Vent et petites pluies : un bon imperméable plutôt qu'un parapluie.","Paris à environ 2 h de train.","Logement abordable (CROUS de 350 à 450 € par mois).","Le double diplôme HKU × Sciences Po commence par 2 ans en France (Le Havre, Reims ou Menton selon l'année : à vérifier), puis 2 ans à Hong Kong."],"galerie":{"ville":[["La plage du Havre","Galets, cabanes blanches et couchers de soleil sur la mer.","wave","plage du Havre cabanes"],["L'église Saint-Joseph","Sa tour-lanterne de béton de 107 m, signée Perret.","tower","église Saint-Joseph Le Havre"],["Le Volcan","La salle de spectacle blanche dessinée par Oscar Niemeyer.","building","Le Volcan Niemeyer Le Havre"],["Le port","Les porte-conteneurs géants qui entrent dans l'estuaire.","boat","port du Havre porte-conteneurs"],["Les falaises d'Étretat","L'arche et l'aiguille, à 30 min de la ville.","cliff","falaises d'Étretat"],["Le centre Perret","Des rues de béton clair classées à l'UNESCO.","skyline","centre-ville Perret Le Havre UNESCO"]],"campus":{"hku-scpo":[["Le campus Europe-Asie","Le campus de Sciences Po consacré à l'Asie, avec des étudiants du monde entier.","campus","Sciences Po campus Le Havre"],["Les Bains des Docks","La piscine dessinée par Jean Nouvel, sur les docks.","wave","Bains des Docks Le Havre"],["Le festival du campus","Chaque année, les étudiants organisent leurs événements et compétitions.","people","Sciences Po Le Havre étudiants"]]}},"hab":"167 000","habNote":"ville, 2023","qs":null,"qsNote":"ville moyenne, non classée","clim":{"st":"Le Havre, cap de la Hève","lo":[4,4,6,8,10,13,15,16,14,11,7,5],"hi":[8,8,11,13,16,19,21,21,19,16,11,8],"r":[1,1,1,1,1,1,1,1,1,1,1,1],"s":[0,0,0,0,0,0,0,0,0,0,0,0],"u":[0,0,1,2,2,2,2,2,2,1,0,0],"rec":[-14,38]},"id":"lehavre"}];
+/* ---------- vie pratique ---------- */
+const MOIS=["Janv.","Févr.","Mars","Avr.","Mai","Juin","Juil.","Août","Sept.","Oct.","Nov.","Déc."];
+const MOIS_L=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const ICO={
+ skyline:'<path d="M2 21h20M4 21V12l3-2 3 2v9M10 21V7l3.5-4L17 7v14M17 21v-9h4v9M13.5 3V1M12 10h3M12 13h3M12 16h3"/>',
+ boat:'<path d="M3 15h18l-3 5H6zM6 15V9h9l3 6M10 9V4h3"/><path d="M2 22c2 0 2-1 4-1s2 1 4 1 2-1 4-1 2 1 4 1 2-1 4-1"/>',
+ mountain:'<path d="M2 20l7-12 4 6 3-4 6 10z"/><path d="M8 10l1.5 2 1.5-1.5"/>',
+ bowl:'<path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7c0-2 2-2 2-4M13 7c0-2 2-2 2-4M7 20h10"/>',
+ train:'<rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 21l-2-4M15 21l2-4M9 14h.01M15 14h.01"/>',
+ temple:'<path d="M2 9l10-6 10 6zM4 9v2h16V9M6 11v8M10 11v8M14 11v8M18 11v8M3 21h18"/>',
+ torii:'<path d="M2 5c6 1 14 1 20 0M4 9h16M6 5v16M18 5v16M12 9V5"/>',
+ lantern:'<path d="M12 2v3M9 5h6M7 9c0-3 10-3 10 0v6c0 3-10 3-10 0zM9 20h6M12 18v2M7 12h10"/>',
+ flower:'<circle cx="12" cy="12" r="2"/><path d="M12 10c-3-6 3-6 0 0M14 12c6-3 6 3 0 0M12 14c3 6-3 6 0 0M10 12c-6 3-6-3 0 0"/>',
+ clock:'<path d="M5 21V10l7-6 7 6v11zM3 21h18"/><circle cx="12" cy="12" r="3"/><path d="M12 10.5V12l1 1"/>',
+ campus:'<path d="M3 10l9-6 9 6zM5 10v9M19 10v9M9 19v-5h6v5M3 21h18"/>',
+ building:'<path d="M4 21V5l8-2v18M12 7l8 3v11M8 9h.01M8 13h.01M8 17h.01M16 13h.01M16 17h.01M2 21h20"/>',
+ tree:'<path d="M12 21v-7M12 3a6 6 0 0 0-5 9 4 4 0 0 0 5 2 4 4 0 0 0 5-2 6 6 0 0 0-5-9z"/>',
+ people:'<circle cx="8" cy="7" r="3"/><circle cx="17" cy="8" r="2.5"/><path d="M2 20c0-4 3-6 6-6s6 2 6 6M14 15c1-1 2-1.5 3-1.5 3 0 5 2 5 5"/>',
+ book:'<path d="M3 5c3-1 6-1 9 1 3-2 6-2 9-1v14c-3-1-6-1-9 1-3-2-6-2-9-1zM12 6v14"/>',
+ ball:'<circle cx="12" cy="12" r="9"/><path d="M12 3c3 3 3 15 0 18M3 12h18M5.5 6c4 2 9 2 13 0M5.5 18c4-2 9-2 13 0"/>',
+ wave:'<path d="M2 12c3-4 5-4 7 0s4 4 7 0 4-4 6-1M2 18c3-4 5-4 7 0s4 4 7 0 4-4 6-1"/><circle cx="18" cy="5" r="2"/>',
+ steam:'<path d="M7 3c-2 2 2 4 0 6M12 2c-2 2 2 4 0 6M17 3c-2 2 2 4 0 6"/><path d="M3 15c3-2 15-2 18 0 0 4-4 6-9 6s-9-2-9-6z"/>',
+ bridge:'<path d="M2 16h20M4 16v4M20 16v4M2 10c5 0 7 6 10 6s5-6 10-6M7 13v3M17 13v3"/>',
+ tower:'<path d="M12 2v4M9 21l2-15h2l2 15M10 13h4M7 21h10"/>',
+ cliff:'<path d="M2 20V8l5-2 3 3 3-1 3 4 6 1v7z"/><path d="M14 20v-4a2 2 0 0 1 4 0v4"/>'
+};
+const svgI=(k,cls="")=>`<svg viewBox="0 0 24 24" class="${cls}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO[k]||ICO.campus}</svg>`;
+const DROP='<path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/>';
+const W_SUN='<svg viewBox="0 0 24 24" aria-hidden="true"><circle class="sun" cx="12" cy="12" r="5"/><path class="sun" stroke-width="2" stroke-linecap="round" d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M5 19l1.4-1.4M17.6 6.4L19 5"/></svg>';
+const W_MIX='<svg viewBox="0 0 24 24" aria-hidden="true"><circle class="sun" cx="9" cy="9" r="4.5"/><path class="cloud" d="M8 20a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.3 3.3 0 0 1 17 20z"/></svg>';
+const W_GRAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path class="cloud" d="M7 19a5 5 0 0 1 0-10 6 6 0 0 1 11.5 2A4 4 0 0 1 18 19z"/></svg>';
+const W_SNOW='<svg viewBox="0 0 24 24" aria-hidden="true"><path class="snow" d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 4l3 2 3-2M9 20l3-2 3 2"/></svg>';
+function drops(n){return Array.from({length:3},(_,i)=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path class="drop${i<n?"":" off"}" d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/></svg>`).join("")}
+const T_MIN=-8,T_MAX=34;
+const tx=t=>Math.max(0,Math.min(100,100*(t-T_MIN)/(T_MAX-T_MIN)));
+function tcol(t){const s=[[-8,215],[5,195],[15,150],[22,45],[28,25],[34,5]];for(let i=1;i<s.length;i++){if(t<=s[i][0]){const a=s[i-1],b=s[i],f=(t-a[0])/(b[0]-a[0]);return `hsl(${a[1]+(b[1]-a[1])*f} 75% 55%)`}}return "hsl(5 75% 55%)"}
+const RAIN_TXT=["sec","un peu de pluie","beaucoup de pluie","pluies très fortes"];
+const SUN_TXT=["ciel souvent gris","soleil et nuages","très ensoleillé"];
+let vSel=null;
+function villeUnis(v){return v.unis.map(id=>PARCOURS.find(p=>p.id===id)).filter(Boolean)}
+function villesOrdre(){return VILLES.map(v=>{const u=villeUnis(v);return {v,u,fav:u.some(p=>p.fav),rang:Math.min(99,...u.map(p=>p.rang||99))}}).sort((a,b)=>(b.fav-a.fav)||(a.rang-b.rang))}
+function climRows(c){
+  const now=Number(new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Vientiane",month:"numeric"}).format(new Date()))-1;
+  const z=tx(0);
+  return `<div class="crow hdr"><span>Mois</span><span style="text-align:right">min</span><span>température</span><span>max</span><span style="text-align:right">ciel</span></div>`+
+  c.lo.map((lo,i)=>{const hi=c.hi[i];
+    const wx=(c.s[i]?W_SNOW:"")+[W_GRAY,W_MIX,W_SUN][c.u[i]];
+    const label=`${MOIS_L[i]} : de ${lo} à ${hi} degrés, ${RAIN_TXT[c.r[i]]}, ${SUN_TXT[c.u[i]]}${c.s[i]?(c.s[i]>1?", neige fréquente":", neige possible"):""}`;
+    return `<div class="crow${i===now?" cur":""}" role="listitem" aria-label="${esc(label)}"><span class="m">${MOIS[i]}</span><span class="lo">${lo}°</span><span class="ctrack"><span class="z" style="left:${z}%"></span><i style="left:${tx(lo)}%;width:${Math.max(3,tx(hi)-tx(lo))}%;background:linear-gradient(90deg,${tcol(lo)},${tcol(hi)})"></i></span><span class="hi">${hi}°</span><span class="cico">${drops(c.r[i])}${wx}</span></div>`}).join("");
+}
+function scenes(v){const out=[];v.galerie.ville.forEach(s=>out.push({g:"La ville",s}));Object.entries(v.galerie.campus).forEach(([id,arr])=>{const p=PARCOURS.find(x=>x.id===id);const n=p?(p.court||p.nom):id;arr.forEach(s=>out.push({g:"Campus · "+n,s}))});return out}
+function card(v,sc,i,big){const [c1,c2]=v.pal,rot=[135,160,110,200,70][i%5];
+  return `<div class="pc${big?" big":""}" style="--c1:${c1};--c2:${c2};--rot:${rot}deg">${svgI(sc.s[2],"pcico")}<span class="pcbg">${svgI(sc.s[2])}</span>${big?`<span class="stamp">${esc(v.nom)}<br>2027</span>`:`<span class="pct">${esc(sc.s[0])}</span>`}</div>`}
+function renderVie(){
+  const pick=$("#v-pick"),main=$("#v-main");if(!pick)return;
+  const L=villesOrdre();
+  if(!vSel||!VILLES.find(v=>v.id===vSel))vSel=L[0].v.id;
+  pick.innerHTML=L.map(({v,u,fav})=>`<button type="button" aria-pressed="${v.id===vSel}" data-vs="${v.id}">${fav?"★ ":""}${esc(v.nom)}<small>${esc(u.map(p=>p.court||p.nom).join(" · ")||"")}</small></button>`).join("");
+  pick.querySelectorAll("button").forEach(b=>b.onclick=()=>{vSel=b.dataset.vs;renderVie();window.scrollTo({top:0,behavior:"smooth"})});
+  const v=VILLES.find(x=>x.id===vSel),c=v.clim,u=villeUnis(v),S=scenes(v);
+  const iCold=c.lo.indexOf(Math.min(...c.lo)),iHot=c.hi.indexOf(Math.max(...c.hi)),wet=c.r.map((r,i)=>r>=2?MOIS_L[i]:null).filter(Boolean);
+  main.innerHTML=`<div class="bcard">
+   <div class="vhead"><h3>${esc(v.nom)}</h3><div class="vsub">${esc(v.pays)}${u.length?" · "+esc(u.map(p=>p.court||p.nom).join(", ")):""}</div></div>
+   <div class="vtiles">
+     <div class="vtile"><span>Vie étudiante</span><b>${v.qs?v.qs+(v.qs===1?"re":"e"):"—"}</b><em>${v.qs?"ville étudiante du monde (QS 2027)":esc(v.qsNote||"non classée")}</em></div>
+     <div class="vtile"><span>Habitants</span><b>${esc(v.hab)}</b><em>${esc(v.habNote)}</em></div>
+     <div class="vtile"><span>Décalage avec Vientiane</span><b>${esc(v.dec.split(" ")[0])}</b><em>${v.dec.includes("hiver")?"−6 h l'hiver":v.dec.startsWith("+1")?"1 h de plus":"2 h de plus"}</em></div>
+   </div>
+  </div>
+  <h2>En photos</h2>
+  <div class="gal" id="v-gal">${S.slice(0,6).map((sc,i)=>`<button type="button" class="gbtn" data-gi="${i}" aria-label="Ouvrir la galerie : ${esc(sc.s[0])}">${card(v,sc,i)}</button>`).join("")}</div>
+  <button type="button" class="btn soft gopen" id="v-galall">Ouvrir la galerie · ${S.length} lieux, ville et campus</button>
+  <h2>Le climat mois par mois</h2>
+  <div class="bcard">
+   <div class="vseason">${esc(v.saisons)}</div>
+   <div class="clim" role="list" aria-label="Climat mois par mois">${climRows(c)}</div>
+   <div class="clegend"><span>${drops(1)} un peu de pluie</span><span>${drops(2)} beaucoup</span><span>${drops(3)} énormément</span><span>${W_SUN} beaucoup de soleil</span><span>${W_MIX} soleil et nuages</span><span>${W_GRAY} souvent gris</span><span>${W_SNOW} neige</span></div>
+   <div class="bsub">Le mois le plus froid : ${MOIS_L[iCold]}, ${c.lo[iCold]}° la nuit. Le plus chaud : ${MOIS_L[iHot]}, ${c.hi[iHot]}° l'après-midi.${wet.length?" Mois les plus pluvieux : "+wet.join(", ")+".":" Pas de vraie saison des pluies."} Records jamais vus : ${c.rec[0]}° et ${c.rec[1]}°.</div>
+   <div class="srcs">Températures moyennes de la nuit (min) et de l'après-midi (max), moyennes 1991-2020, station ${esc(c.st)}. Le mois en couleur est le mois actuel.</div>
+  </div>
+  <h2>Ce qui fait sa réputation</h2>
+  <div class="bcard vblock"><ul>${v.reputee.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+  <h2>Les sports à essayer</h2>
+  <div class="bcard"><div class="vchips">${v.sports.map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>
+  <h2>Bon à savoir</h2>
+  <div class="bcard vblock"><ul>${v.asavoir.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+  <h2>Comparer les villes</h2>
+  <div class="bcard vcmp"><table><thead><tr><th>Ville</th><th>Janvier</th><th>Août</th><th>Vie étud.</th></tr></thead><tbody>${L.map(({v:x})=>`<tr><td><button type="button" data-vc="${x.id}">${esc(x.nom)}</button></td><td>${x.clim.lo[0]}° à ${x.clim.hi[0]}°</td><td>${x.clim.lo[7]}° à ${x.clim.hi[7]}°</td><td>${x.qs?x.qs+(x.qs===1?"re":"e"):"—"}</td></tr>`).join("")}</tbody></table><div class="bsub">Vie étudiante : classement QS Best Student Cities 2027 (150 villes). Les petites villes n'y figurent pas.</div></div>
+  <p class="srcs">Sources : normales climatiques des services météo nationaux (via Wikipédia), QS Best Student Cities 2027 (juillet 2026), recensements et estimations officielles 2023-2026. Relevé le 11 octobre 2026.</p>`;
+  main.querySelectorAll("[data-gi]").forEach(b=>b.onclick=()=>openGal(v,Number(b.dataset.gi)));
+  $("#v-galall").onclick=()=>openGal(v,0);
+  main.querySelectorAll("[data-vc]").forEach(b=>b.onclick=()=>{vSel=b.dataset.vc;renderVie();window.scrollTo({top:0,behavior:"smooth"})});
+}
+function openGal(v,start){
+  const S=scenes(v),d=$("#gal-dlg"),track=$("#gal-track");
+  $("#gal-title").textContent=v.nom;
+  track.innerHTML=S.map((sc,i)=>`<figure class="slide" data-si="${i}">${card(v,sc,i,true)}<figcaption><span class="sgroup">${esc(sc.g)}</span><b>${esc(sc.s[0])}</b><span>${esc(sc.s[1])}</span><a class="btn photos" href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(sc.s[3])}" target="_blank" rel="noopener">Voir les vraies photos</a></figcaption></figure>`).join("");
+  const thumbs=$("#gal-thumbs");
+  thumbs.innerHTML=S.map((sc,i)=>`<button type="button" data-ti="${i}" aria-label="${esc(sc.s[0])}">${card(v,sc,i)}</button>`).join("");
+  const go=i=>{const el=track.children[i];if(el)track.scrollTo({left:el.offsetLeft,behavior:"smooth"})};
+  thumbs.querySelectorAll("button").forEach(b=>b.onclick=()=>go(Number(b.dataset.ti)));
+  $("#gal-prev").onclick=()=>go(Math.max(0,cur()-1));$("#gal-next").onclick=()=>go(Math.min(S.length-1,cur()+1));
+  const cur=()=>Math.round(track.scrollLeft/Math.max(1,track.clientWidth));
+  const upd=()=>{const i=cur();$("#gal-count").textContent=(i+1)+" / "+S.length;thumbs.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-current",j===i));const t=thumbs.children[i];if(t)thumbs.scrollTo({left:t.offsetLeft-thumbs.clientWidth/2+t.clientWidth/2,behavior:"smooth"})};
+  track.onscroll=()=>{clearTimeout(track._t);track._t=setTimeout(upd,60)};
+  d.showModal();requestAnimationFrame(()=>{track.scrollLeft=track.clientWidth*start;upd()});
+}
+
+$("#gal-close").onclick=()=>$("#gal-dlg").close();
+
+/* ---------- onglets ---------- */
+function show(v){document.querySelectorAll(".tabbar button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===v));["carnet","frise","unis","budget","vie","assistant"].forEach(x=>$("#v-"+x).hidden=x!==v);$("#fab").hidden=v==="assistant"||v==="budget"||v==="vie"||!canWrite;window.scrollTo({top:0});try{localStorage.setItem("lp2-tab",v)}catch(e){}}
+document.querySelectorAll(".tabbar button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+try{const t=localStorage.getItem("lp2-tab");if(t)show(t)}catch(e){}
+if(location.hash==="#assistant")show("assistant");
+
+/* ---------- écriture ---------- */
+let chain=Promise.resolve();
+function banner(t){$("#db-banner").textContent=t;$("#db-banner").hidden=false}
+let pending=0;
+function write(fn){pending++;chain=chain.then(fn).catch(()=>banner("L'enregistrement n'a pas marché. Vérifie internet et réessaie.")).finally(()=>{pending--});return chain}
+function toggle(f){if(!KEY||!canWrite)return;const s=f.statut==="fait"?"a_faire":"fait";f.statut=s;render();write(()=>rpc("lou_save_fiche",{p_key:KEY,p_id:f.id,p_data:{statut:s,majLe:new Date().toISOString()}}))}
+function toggleFav(p){if(!KEY||!canWrite)return;p.fav=!p.fav;render();write(()=>rpc("lou_set_fav",{p_key:KEY,p_id:p.id,p_fav:p.fav}))}
+let editing=null;
+function openEdit(f){editing=f||null;$("#e-title").textContent=f?"Modifier l'étape":"Nouvelle étape";$("#e-titre").value=f?.titre||"";$("#e-univ").value=f?.univ||"commun";$("#e-date").value=f?.date||"";$("#e-nature").value=f?.nature||"objectif";$("#e-statut").value=f?.statut||"a_faire";$("#e-qui").value=f?.qui||"Lou";$("#e-note").value=f?.note||"";$("#e-err").hidden=true;if($("#uni-sheet").open)$("#uni-sheet").close();$("#edit").showModal()}
+$("#fab").onclick=()=>openEdit(null);$("#e-cancel").onclick=()=>$("#edit").close();
+$("#edit-form").addEventListener("submit",ev=>{ev.preventDefault();if(!KEY)return;
+  const body={titre:$("#e-titre").value.trim(),univ:$("#e-univ").value,date:$("#e-date").value,nature:$("#e-nature").value,statut:$("#e-statut").value,qui:$("#e-qui").value,note:$("#e-note").value.trim(),majLe:new Date().toISOString()};
+  if(!body.titre){$("#e-err").textContent="Écris ce qu'il faut faire.";$("#e-err").hidden=false;return}
+  $("#edit").close();
+  if(editing){Object.assign(editing,body);render();const id=editing.id;write(()=>rpc("lou_save_fiche",{p_key:KEY,p_id:id,p_data:body}))}
+  else{const id="e-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const full={...body,creeLe:new Date().toISOString()};FICHES.push({id,...full});render();write(()=>rpc("lou_save_fiche",{p_key:KEY,p_id:id,p_data:full}))}
+});
+
+/* ---------- données (base en ligne, accès par le lien secret) ---------- */
+const SB_URL="https://qctahthyxrwzftjswuma.supabase.co", SB_KEY="sb_publishable_Iz8YaGIuCqwa8toDo3fU1w_uGS5bofP";
+function readKey(){
+  let k="";
+  const m=location.hash.match(/k=([A-Za-z0-9_-]{24,})/);
+  if(m){k=m[1];try{localStorage.setItem("lp-key",k)}catch(e){}}
+  else{try{k=localStorage.getItem("lp-key")||""}catch(e){}}
+  return k;
+}
+const KEY=readKey();
+addEventListener("hashchange",()=>{const m=location.hash.match(/k=([A-Za-z0-9_-]{24,})/);if(m&&m[1]!==KEY)location.reload()});
+async function rpc(fn,args){
+  const r=await fetch(SB_URL+"/rest/v1/rpc/"+fn,{method:"POST",headers:{"apikey":SB_KEY,"Content-Type":"application/json"},body:JSON.stringify(args)});
+  const t=await r.text();
+  if(!r.ok){const e=new Error(t);e.status=r.status;try{e.code=JSON.parse(t).code}catch(_){}throw e}
+  return t?JSON.parse(t):null;
+}
+function lockScreen(){$("#lock").hidden=false;["carnet","frise","unis","budget","vie","assistant"].forEach(x=>$("#v-"+x).hidden=true);$(".tabbar").hidden=true;$("#fab").hidden=true;$("#next-what").textContent="Lien incomplet";$("#next-n").innerHTML="–"}
+function setIcon(src){
+  const draw=img=>{try{const cv=document.createElement("canvas");cv.width=cv.height=180;const x=cv.getContext("2d");
+    const g=x.createLinearGradient(0,0,180,180);g.addColorStop(0,"#6a5ae0");g.addColorStop(1,"#9b6cf2");x.fillStyle=g;x.fillRect(0,0,180,180);
+    if(img){const s=Math.min(img.width,img.height);x.drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,180,180)}
+    else{x.fillStyle="#fff";x.font="bold 110px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText("L",90,98)}
+    const u=cv.toDataURL("image/png");["apple-touch-icon","icon"].forEach(r=>{let l=document.querySelector('link[rel="'+r+'"]');if(!l){l=document.createElement("link");l.rel=r;document.head.append(l)}l.href=u})}catch(e){}};
+  if(!src)return draw(null);const im=new Image();im.onload=()=>draw(im);im.onerror=()=>draw(null);im.src=src;
+}
+setIcon("");
+let loadedOnce=false;
+async function load(){
+  if(!KEY){lockScreen();return}
+  if(pending)return;
+  try{
+    const d=await rpc("lou_load",{p_key:KEY});
+    if(pending)return;
+    FICHES=d.fiches||[];PARCOURS=d.parcours||[];
+    const c=d.config||{};
+    if(c.photo&&c.photo!==PHOTO){PHOTO=c.photo;setPhoto();setIcon(PHOTO)}
+    if(c.kb)KB=c.kb; if(c.kb_date)KB_DATE=c.kb_date;
+    loadedOnce=true;$("#db-banner").hidden=true;render();updGpt();
+  }catch(e){
+    if(e.code==="42501"){lockScreen();return}
+    banner(loadedOnce?"Pas de connexion pour l'instant : ce que tu vois n'est peut-être pas à jour.":"Tes étapes n'ont pas pu se charger. Vérifie internet puis recharge la page.");
+  }
+}
+load();
+render();
+setInterval(()=>{if(!document.hidden)load()},60e3);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});
+
+/* ---------- onglet ChatGPT ---------- */
+const GPT_RULES="Tu aides Lou, lycéenne en Terminale au lycée français de Vientiane (Laos), à préparer ses candidatures universitaires (rentrée septembre 2027). Réponds en français, en la tutoyant, avec des mots simples et chaleureux, sans flatterie : 3 à 8 phrases ou une petite liste. Appuie-toi d'abord sur les informations ci-dessous ; si une information manque, dis-le et conseille de vérifier sur le site officiel de l'université ou de demander à papa. N'invente jamais une date, un code ou une exigence. Pour ses textes de candidature (personal statement, applicant statement, essays de Waseda) : aide-la à trouver des idées, à faire un plan, pose-lui des questions et corrige ce qu'ELLE a écrit, mais n'écris jamais le texte ni un paragraphe entier à sa place, même si elle insiste (Waseda interdit les textes écrits par une IA). Argent, paiements, mots de passe, passeport : renvoie vers papa. Si elle paraît stressée, rassure-la et propose une seule prochaine étape simple.";
+const SUJETS={general:["Ordre conseillé","Ce qu'il faut demander au lycée"],textes:["Qui est Lou","Ordre conseillé"],hku:["HKU"],hkbu:["HKBU"],cityu:["CityUHK"],waseda:["Waseda"],autres:["Les autres pistes"]};
+function kbParts(){const o={};KB.split(/\n(?=## )/).forEach(s=>{const m=s.match(/^## (.+)/);if(m)o[m[1]]=s.trim()});return o}
+function kbFor(sujet){const P=kbParts(),want=SUJETS[sujet]||[];return Object.keys(P).filter(h=>want.some(w=>h.startsWith(w))).map(h=>P[h])}
+function etatCourt(sujet,max){
+  const t=todayD().toISOString().slice(0,10);
+  let fs=FICHES.filter(isOpen);
+  if(["hku","hkbu","cityu","waseda"].includes(sujet))fs=fs.filter(f=>f.univ===sujet||f.univ==="commun");
+  fs=fs.sort(byDate).slice(0,max);
+  const favs=PARCOURS.filter(p=>p.fav).map(p=>p.court||p.nom);
+  return `Aujourd'hui (Vientiane) : ${t}.\nMes prochaines étapes (pas encore faites) :\n`+fs.map(f=>{const p=uniOf(f.univ);return `- ${f.titre} (${p?(p.court||p.nom):"toutes"} ; ${f.date?fd(f.date)+(f.nature==="officielle"?", date officielle":", objectif"):"sans date"}${f.statut==="en_cours"?" ; en cours":""})`}).join("\n")+(favs.length?`\nMes universités favorites : ${favs.join(", ")}.`:"");
+}
+function buildPrompt(q,sujet,full){
+  const head=GPT_RULES,ask="\n\nMA QUESTION : "+q;
+  const kb=kbFor(sujet);
+  const mk=(kbs,n)=>head+(kbs.length?`\n\nINFORMATIONS (relevées sur les sites officiels le ${KB_DATE}) :\n`+kbs.join("\n\n"):"")+"\n\n"+etatCourt(sujet,n)+ask;
+  if(full)return mk(kb,15);
+  for(const n of [15,10,6,3]){const p=mk(kb,n);if(encodeURIComponent(p).length<7500)return p}
+  let kbs=kb.slice();
+  while(kbs.length){const p=mk(kbs,3);if(encodeURIComponent(p).length<7500)return p;kbs=[kbs[0].slice(0,Math.floor(kbs[0].length*0.7))].concat(kbs.slice(1,-1))}
+  return mk([],3);
+}
+const gq=$("#g-q"),gs=$("#g-sujet"),go=$("#g-go");
+function updGpt(){
+  const q=gq.value.trim();
+  if(!q){go.setAttribute("aria-disabled","true");go.href="https://chatgpt.com/";return}
+  go.removeAttribute("aria-disabled");
+  go.href="https://chatgpt.com/?q="+encodeURIComponent(buildPrompt(q,gs.value,false));
+}
+gq.addEventListener("input",updGpt);gs.addEventListener("change",updGpt);
+go.addEventListener("click",ev=>{
+  const q=gq.value.trim();if(!q){ev.preventDefault();gq.focus();return}
+  updGpt();
+  const txt=buildPrompt(q,gs.value,true);
+  try{navigator.clipboard&&navigator.clipboard.writeText(txt).catch(()=>{})}catch(e){}
+  $("#g-msg").textContent="ChatGPT s'ouvre. Ta question et ton dossier sont aussi copiés : si la case est vide, colle-les.";
+});
+document.querySelectorAll("#sugg button").forEach(b=>b.onclick=()=>{gq.value=b.textContent;gs.value=b.dataset.s||"general";updGpt();gq.scrollIntoView({block:"center",behavior:"smooth"})});
+updGpt();
+
+</script>
+
+</body></html>
+</body>
+</html>
