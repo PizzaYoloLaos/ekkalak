@@ -2,7 +2,7 @@
    Network-first for everything: data must always be live.
    Only the app shell falls back to cache when offline. */
 'use strict';
-var CACHE = 'ekkalak-v4';
+var CACHE = 'ekkalak-v5';
 var SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'logo.png'];
 
 self.addEventListener('install', function (e) {
@@ -19,6 +19,10 @@ self.addEventListener('fetch', function (e) {
   var url = new URL(e.request.url);
   // Never cache Supabase API calls
   if (url.hostname.indexOf('supabase.co') !== -1) return;
+  // Pages hors portail (ex. /lou/) : jamais interceptées
+  if (url.origin === self.location.origin && url.pathname.indexOf('/lou') === 0) return;
+  // Seulement le même site ; le reste passe directement par le réseau
+  if (url.origin !== self.location.origin) return;
   e.respondWith(
     fetch(e.request).then(function (res) {
       if (e.request.method === 'GET' && res.ok && url.origin === self.location.origin) {
@@ -27,7 +31,7 @@ self.addEventListener('fetch', function (e) {
       }
       return res;
     }).catch(function () {
-      return caches.match(e.request, { ignoreSearch: true });
+      return caches.match(e.request, { ignoreSearch: true }).then(function (r) { return r || Response.error(); });
     })
   );
 });
