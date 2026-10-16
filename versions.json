@@ -1,0 +1,10 @@
+{
+  "maj_le": "2026-10-16",
+  "note": "Version en ligne de chaque outil, affichée sous sa tuile dans le portail. Mise à jour par l'agent (contrôle de nuit) ou par l'IA qui met un outil en ligne. Outil absent = rien d'affiché.",
+  "outils": {
+    "expenses.home-vte.com": "V60",
+    "expenses.pizzayolo.la": "V80",
+    "expenses.residencebassac.com": "V18",
+    "cdc.ekkalak.com": "V37"
+  }
+}
