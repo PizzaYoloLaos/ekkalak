@@ -1,10 +1,10 @@
 {
-  "maj_le": "2026-10-21",
+  "maj_le": "2026-10-22",
   "note": "Version en ligne de chaque outil, affichée sous sa tuile dans le portail. Mise à jour par l'agent (contrôle de nuit) ou par l'IA qui met un outil en ligne. Outil absent = rien d'affiché.",
   "outils": {
-    "sales.home-vte.com": "V15",
-    "expenses.home-vte.com": "V60",
-    "pnl.home-vte.com": "V38",
+    "sales.home-vte.com": "V16",
+    "expenses.home-vte.com": "V61",
+    "pnl.home-vte.com": "V39",
     "costing.home-vte.com": "V23",
     "coverage.home-vte.com": "V11",
     "petty.home-vte.com": "V3",
