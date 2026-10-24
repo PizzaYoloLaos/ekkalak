@@ -1,5 +1,5 @@
 {
-  "maj_le": "2026-10-23",
+  "maj_le": "2026-10-24",
   "note": "Version en ligne de chaque outil, affichée sous sa tuile dans le portail. Mise à jour par l'agent (contrôle de nuit) ou par l'IA qui met un outil en ligne. Outil absent = rien d'affiché.",
   "outils": {
     "sales.home-vte.com": "V16",
@@ -23,7 +23,7 @@
     "expenses.residencebassac.com": "V18",
     "incomes.residencebassac.com": "V6",
     "pnl.residencebassac.com": "V6",
-    "costing.residencebassac.com": "V5",
+    "costing.residencebassac.com": "V12",
     "cdc.ekkalak.com": "V55",
     "expansion.pizzayolo.la": "V27"
   }
