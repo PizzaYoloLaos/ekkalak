@@ -1,5 +1,5 @@
 {
-  "maj_le": "2026-10-25",
+  "maj_le": "2026-10-26",
   "note": "Version en ligne de chaque outil, affichée sous sa tuile dans le portail. Mise à jour par l'agent (contrôle de nuit) ou par l'IA qui met un outil en ligne. Outil absent = rien d'affiché.",
   "outils": {
     "sales.home-vte.com": "V16",
@@ -15,7 +15,7 @@
     "petty.pizzayolo.la": "V9",
     "ops.pizzayolo.la": "V28",
     "stock.pizzayolo.la": "V16",
-    "checkme.pizzayolo.la": "V26",
+    "checkme.pizzayolo.la": "V27",
     "simulator.namphak.com": "V40",
     "advisory.namphak.com": "V17",
     "kiln.namphak.com": "V14",
