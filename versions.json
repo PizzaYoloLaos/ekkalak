@@ -1,5 +1,5 @@
 {
-  "maj_le": "2026-11-03",
+  "maj_le": "2026-11-05",
   "note": "Version en ligne de chaque outil, affichée sous sa tuile dans le portail. Mise à jour par l'agent (contrôle de nuit) ou par l'IA qui met un outil en ligne. Outil absent = rien d'affiché.",
   "outils": {
     "sales.home-vte.com": "V16",
@@ -11,7 +11,7 @@
     "sales.pizzayolo.la": "V39",
     "expenses.pizzayolo.la": "V80",
     "pnl.pizzayolo.la": "V41",
-    "costing.pizzayolo.la": "V11",
+    "costing.pizzayolo.la": "V12",
     "petty.pizzayolo.la": "V9",
     "ops.pizzayolo.la": "V28",
     "stock.pizzayolo.la": "V16",
