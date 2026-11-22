@@ -1,5 +1,5 @@
 {
-  "maj_le": "2026-11-20",
+  "maj_le": "2026-11-22",
   "note": "Version en ligne de chaque outil, affichée sous sa tuile dans le portail. Mise à jour par l'agent (contrôle de nuit) ou par l'IA qui met un outil en ligne. Outil absent = rien d'affiché.",
   "portail": "V18",
   "outils": {
@@ -29,9 +29,9 @@
     "cdc.ekkalak.com": "V86",
     "expansion.pizzayolo.la": "V30",
     "expenses.lacantina-lpq.com": "V12",
-    "sales.lacantina-lpq.com": "V14",
+    "sales.lacantina-lpq.com": "V15",
     "pnl.lacantina-lpq.com": "V13",
-    "petty.lacantina-lpq.com": "V20",
+    "petty.lacantina-lpq.com": "V21",
     "costing.lacantina-lpq.com": "V12"
   }
 }
