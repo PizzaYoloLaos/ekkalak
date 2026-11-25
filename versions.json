@@ -1,5 +1,5 @@
 {
-  "maj_le": "2026-11-24",
+  "maj_le": "2026-11-25",
   "note": "Version en ligne de chaque outil, affichée sous sa tuile dans le portail. Mise à jour par l'agent (contrôle de nuit) ou par l'IA qui met un outil en ligne. Outil absent = rien d'affiché.",
   "portail": "V18",
   "outils": {
@@ -31,7 +31,7 @@
     "expenses.lacantina-lpq.com": "V15",
     "sales.lacantina-lpq.com": "V17",
     "pnl.lacantina-lpq.com": "V16",
-    "petty.lacantina-lpq.com": "V23",
+    "petty.lacantina-lpq.com": "V24",
     "costing.lacantina-lpq.com": "V15"
   }
 }
