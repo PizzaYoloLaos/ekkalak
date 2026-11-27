@@ -1,5 +1,5 @@
 {
-  "maj_le": "2026-11-26",
+  "maj_le": "2026-11-27",
   "note": "Version en ligne de chaque outil, affichée sous sa tuile dans le portail. Mise à jour par l'agent (contrôle de nuit) ou par l'IA qui met un outil en ligne. Outil absent = rien d'affiché.",
   "portail": "V19",
   "outils": {
@@ -27,7 +27,7 @@
     "costing.residencebassac.com": "V12",
     "cash.residencebassac.com": "V2",
     "yield.residencebassac.com": "V10",
-    "cdc.ekkalak.com": "V90",
+    "cdc.ekkalak.com": "V91",
     "expansion.pizzayolo.la": "V30",
     "expenses.lacantina-lpq.com": "V15",
     "sales.lacantina-lpq.com": "V17",
